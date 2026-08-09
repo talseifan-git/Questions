@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תרגול חובשים • מד"א</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1318">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="תרגול חובשים">
+<style>
+  :root{
+    --bg: #0f1318;
+    --bg-grid: #131922;
+    --card: #1a212b;
+    --card-2: #212a37;
+    --line: #2a3644;
+    --text: #eef1f5;
+    --muted: #8996a6;
+    --muted-2: #64707f;
+    --red: #e2402f;
+    --red-dim: #7a2b23;
+    --green: #3fae6a;
+    --green-dim: #1f4a34;
+    --amber: #f0a93a;
+    --amber-dim: #5c451c;
+    --blue: #7fb2e0;
+    --blue-dim: #1c2c3a;
+    --teal: #4fc9c4;
+    --teal-dim: #163330;
+    --mono: 'Courier New', ui-monospace, Consolas, monospace;
+    --sans: 'Segoe UI', Arial, 'Helvetica Neue', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    background-image:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: 44px 44px;
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 20px 16px 80px; }
+
+  /* ---------- Header ---------- */
+  header{ padding: 28px 4px 18px; }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  h1{
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle{ color: var(--muted); font-size: 14.5px; margin: 0; }
+
+  .ecg{ width:100%; height:34px; margin: 18px 0 6px; opacity:.85; }
+  .ecg path{
+    fill:none; stroke: var(--red); stroke-width:2;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .ecg path{
+      stroke-dasharray: 340;
+      stroke-dashoffset: 340;
+      animation: draw 2.2s ease-out forwards;
+    }
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  /* ---------- Controls panel ---------- */
+  .panel{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .panel-title{
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin: 0 0 12px;
+  }
+  .source-toggles{ display:flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .toggle{
+    flex: 1 1 200px;
+    display:flex; align-items:center; gap:10px;
+    background: var(--card-2);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s, background .15s;
+  }
+  .toggle input{ display:none; }
+  .toggle .box{
+    width:18px; height:18px; border-radius:5px;
+    border: 1.5px solid var(--muted-2);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .toggle.active .box::after{ content:'✓'; font-size:12px; font-weight:bold; }
+  .toggle-label{ font-weight:600; font-size:14.5px; }
+  .toggle-sub{ font-size:12px; color: var(--muted); margin-top:1px; }
+  .toggle-count{ font-family: var(--mono); font-size:11px; color: var(--muted); margin-top:4px; line-height:1.5; }
+  .toggle.disabled{ opacity:.45; cursor:not-allowed; }
+
+  /* Source toggles (bank vs. generated) share one accent (blue) — same as each
+     other, different from the qtype accent below — so the panel reads as one
+     consistent "source" group, distinct from the "type" group underneath it. */
+  .toggle.bank.active, .toggle.gen.active{ border-color: var(--blue); background: var(--blue-dim); }
+  .toggle.bank.active .box, .toggle.gen.active .box{ background: var(--blue); border-color: var(--blue); }
+  .toggle.bank.active .box::after, .toggle.gen.active .box::after{ color:#0f1318; }
+
+  /* Question-type toggles share one distinct accent (teal), deliberately
+     different from the source toggles above, so the two panels read as two
+     different kinds of filter rather than one long list of identical chips. */
+  .toggle.qtype.active{ border-color: var(--teal); background: var(--teal-dim); }
+  .toggle.qtype.active .box{ background: var(--teal); border-color: var(--teal); }
+  .toggle.qtype.active .box::after{ color:#0f1318; }
+  /* Bumped contrast: the plain --muted grey reads too dim against the dark
+     teal-dim card background (see feedback screenshot), so the question
+     counts get a brighter, slightly teal-tinted color specifically when the
+     card is active. */
+  .toggle.qtype.active .toggle-count{ color:#bfeae7; }
+
+  .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  select{
+    background: var(--card-2);
+    color: var(--text);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13.5px;
+    font-family: var(--sans);
+    flex: 1 1 220px;
+  }
+  .btn{
+    border: none; border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: transform .08s, opacity .15s;
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: var(--red); color:#fff; }
+  .btn-ghost{ background: transparent; color: var(--text); border: 1.5px solid var(--line); }
+  .btn-ghost:hover{ border-color: var(--muted); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-sm{ padding: 8px 14px; font-size: 13px; }
+
+  /* ---------- Stats strip ---------- */
+  .stats{ display:flex; gap:10px; margin-bottom:18px; align-items:stretch; flex-wrap:wrap; }
+  .stats .btn{ flex-shrink:0; align-self:center; }
+  .stat{
+    flex:1; background: var(--card); border:1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; text-align:center;
+  }
+  .stat b{ display:block; font-family: var(--mono); font-size:20px; }
+  .stat span{ font-size: 11px; color: var(--muted); }
+  .stat.green b{ color: var(--green); }
+  .stat.amber b{ color: var(--amber); }
+  .stat.red b{ color: var(--red); }
+
+  /* ---------- Question card ---------- */
+  .qcard{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 26px 22px;
+    margin-bottom: 16px;
+  }
+  .qmeta{ display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+  .tag{
+    font-family: var(--mono); font-size: 11px; letter-spacing:.04em; font-weight:600;
+    padding: 4px 9px; border-radius: 20px; border: 1px solid var(--line);
+    color: #cfd6de;
+  }
+  .tag.bank{ border-color:#3a5a7a; color:#7fb2e0; }
+  .tag.generated{ border-color:#5a3a7a; color:#c199e8; }
+  .qtext{ font-size: 18.5px; font-weight: 600; margin: 0 0 20px; line-height:1.55; white-space: pre-wrap; }
+  .multi-instruction{
+    font-size: 13.5px; color: var(--amber); font-weight:700; margin: -12px 0 16px;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .opt{
+    display:flex; align-items:flex-start; gap:12px;
+    background: var(--card-2);
+    border: 1.5px solid var(--line);
+    border-radius: 11px;
+    padding: 13px 15px;
+    cursor: pointer;
+    text-align: right;
+    font-size: 15px;
+    transition: border-color .12s, background .12s;
+  }
+  .opt:hover:not(.disabled){ border-color:#3d4d5f; }
+  .opt.selected{ border-color: var(--blue); background:#182430; }
+  .opt.selected .letter{ background: var(--blue); color:#0f1318; }
+  .opt .letter{
+    font-family: var(--mono); font-weight:700; color: var(--muted);
+    flex-shrink:0; width:22px; height:22px; border-radius:6px;
+    background: var(--bg); display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .opt .checkbox{
+    font-family: var(--mono); font-weight:700; flex-shrink:0; width:22px; height:22px;
+    border-radius:6px; border:1.5px solid var(--muted-2);
+    background: var(--bg); display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .opt.selected .checkbox{ background: var(--blue); border-color: var(--blue); }
+  .opt.selected .checkbox::after{ content:'✓'; color:#0f1318; font-size:13px; font-weight:bold; }
+  .opt.disabled{ cursor:default; }
+  .opt.wrong-try{ border-color: var(--red-dim); background:#2a1a19; opacity:.7; }
+  .opt.wrong-try .letter{ background: var(--red-dim); color:#fff; }
+  .opt.correct-reveal{ border-color: var(--green); background: #16241c; }
+  .opt.correct-reveal .letter{ background: var(--green); color:#0f1318; }
+  .opt.wrong-reveal{ border-color: var(--red); background:#2a1719; }
+  .opt.wrong-reveal .letter{ background: var(--red); color:#fff; }
+
+  .feedback{
+    margin-top: 14px; padding: 12px 14px; border-radius: 10px;
+    font-size: 14px; font-weight:600;
+  }
+  .feedback.retry{ background: var(--amber-dim); color: var(--amber); }
+  .feedback.correct{ background: var(--green-dim); color: var(--green); }
+
+  .explain-box{
+    margin-top: 16px; padding: 16px; border-radius: 12px;
+    background: var(--card-2); border: 1px solid var(--line);
+    font-size: 14.5px; display:none;
+  }
+  .explain-box.show{ display:block; }
+  .explain-box .eh{
+    font-family: var(--mono); font-size:12.5px; letter-spacing:.05em;
+    font-weight:800; text-transform:uppercase; margin-bottom:8px;
+    padding-right:10px; border-right: 3px solid;
+  }
+  .explain-box .eh-correct{ color: var(--green); border-right-color: var(--green); }
+  .explain-box .eh-wrong{ color: var(--amber); border-right-color: var(--amber); margin-top:16px; }
+  .explain-box p{ margin: 0 0 10px; line-height:1.6; }
+  .explain-box p:last-child{ margin-bottom:0; }
+  .note-callout{
+    margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+    background: var(--amber-dim); color: var(--amber);
+    font-size: 13px; border-right: 3px solid var(--amber);
+  }
+
+  .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+
+  .empty-state{ text-align:center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .big{ font-size:42px; margin-bottom:12px; }
+
+  footer{ text-align:center; color: var(--muted-2); font-size:12px; margin-top: 40px; }
+  footer a{ color: var(--muted); }
+
+  @media (max-width:520px){
+    h1{ font-size:24px; }
+    .qtext{ font-size:16.5px; }
+    .qcard{ padding:18px 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">מד"א · קורס חובשי רפואת חירום</div>
+    <h1>תרגול לפני מבחן</h1>
+    <p class="subtitle">שאלות מהבנק, שאלות שנוצרות מתוכן המצגות, או שילוב של השניים — הכל רץ מקומית, בלי אינטרנט.</p>
+    <svg class="ecg" viewBox="0 0 400 34" preserveAspectRatio="none">
+      <path d="M0,17 L60,17 L75,17 L85,4 L95,30 L105,10 L115,17 L140,17 L400,17"/>
+    </svg>
+  </header>
+
+  <div class="panel">
+    <p class="panel-title">מקור השאלות</p>
+    <div class="source-toggles">
+      <label class="toggle bank active" id="toggleBank">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">מהקובץ (בנק שאלות)</div>
+          <div class="toggle-sub" id="bankCount">— שאלות קבועות · עובד תמיד בלי אינטרנט</div>
+        </span>
+      </label>
+      <label class="toggle gen active" id="toggleGen">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">מהמצגת (שאלות מיוצרות)</div>
+          <div class="toggle-sub" id="genCount">— חלק נוסחתי אקראי, חלק קבוע מהתוכן</div>
+        </span>
+      </label>
+    </div>
+    <p class="panel-title">סוג שאלה</p>
+    <div class="source-toggles">
+      <label class="toggle qtype active" id="toggleConcept">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">מושג</div>
+          <div class="toggle-sub">זיהוי/הבנה — "מה זה", "למה"</div>
+          <div class="toggle-count" id="countConcept"></div>
+        </span>
+      </label>
+      <label class="toggle qtype active" id="toggleNumeric">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">מספר וחישוב</div>
+          <div class="toggle-sub">מינון, טווח, נוסחה</div>
+          <div class="toggle-count" id="countNumeric"></div>
+        </span>
+      </label>
+      <label class="toggle qtype active" id="toggleScenario">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">תרחיש</div>
+          <div class="toggle-sub">"הגעת ל... מה תעשה"</div>
+          <div class="toggle-count" id="countScenario"></div>
+        </span>
+      </label>
+    </div>
+    <p class="panel-title">נושא</p>
+    <div class="row2">
+      <select id="topicFilter"></select>
+      <button class="btn btn-primary" id="nextBtn">השאלה הבאה</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat green"><b id="statFirst">0</b><span>נכון בניסיון ראשון</span></div>
+    <div class="stat amber"><b id="statSecond">0</b><span>נכון בניסיון שני</span></div>
+    <div class="stat red"><b id="statMissed">0</b><span>לא נכון</span></div>
+    <div class="stat"><b id="statTotal">0</b><span>סה"כ נענו</span></div>
+    <button class="btn btn-ghost btn-sm" id="resetStatsBtn" title="איפוס הספירה">איפוס</button>
+  </div>
+
+  <div id="qArea">
+    <div class="empty-state">
+      <div class="big">🩺</div>
+      <p>לחץ "שאלה הבאה" כדי להתחיל.</p>
+    </div>
+  </div>
+
+  <footer>
+    כל הזכויות שמורות למגן דוד אדום בישראל — כלי עזר לתרגול, לא תחליף לחומר הקורס הרשמי.
+  </footer>
+</div>
+
+<script src="question_bank.js"></script>
+<script src="generated_content.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // ---------------- State ----------------
+  const state = {
+    useBank: true,
+    useGen: true,
+    qtypes: new Set(['concept', 'numeric', 'scenario']), // all on by default
+    topic: 'all',
+    current: null,       // current question object
+    attempt: 0,          // 0 = not answered yet, 1 = one wrong try used
+    wrongLetters: new Set(),     // single-select: ruled-out letters this attempt
+    selectedLetters: new Set(),  // multi-select: currently checked letters
+    answered: false,
+    stats: { first: 0, second: 0, missed: 0 }, // always starts at zero on load — no cross-session persistence
+    recentKeys: [] // FIFO of the last N question dedup-keys, so we can avoid immediate repeats
+  };
+
+  // How many most-recently-asked questions to avoid repeating.
+  const NO_REPEAT_WINDOW = 20;
+
+  // Dedup key for a question: bank/concept questions have a stable id, but
+  // template-generated numeric questions get a fresh random id every time
+  // .generate() runs (see generated_content.js), so an id-based check would
+  // never catch "the same template came up again with different numbers".
+  // Use the template key instead for those.
+  function questionKey(q){
+    return q.template || q.id;
+  }
+
+  function rememberAsked(q){
+    state.recentKeys.push(questionKey(q));
+    if(state.recentKeys.length > NO_REPEAT_WINDOW) state.recentKeys.shift();
+  }
+
+  // Ranked priority order (1 = highest) for the sections that actually exist in
+  // question_bank.js today. Used for: weighting random selection under "all topics",
+  // and ordering the topic dropdown. (A section not listed here still works fully —
+  // buildTopicList appends it after the ranked ones, and priorityWeight falls back
+  // to the lowest weight for it — but it won't get intentional priority placement
+  // until added to this list; see buildTopicList/sectionAllowed below.)
+  const PRIORITY_ORDER = [
+    'החייאה',
+    'טראומה',
+    'הטיפול בחולה',
+    'אנטומיה ופיזיולוגיה',
+    'לידה וגניקולוגיה',
+    'פגיעות סביבתיות',
+    'ציוד רפואי',
+    'עבודת הצוות',
+    'קבלת החלטות ודיווחים'
+  ];
+  // Highest-priority section gets the largest weight, decreasing linearly down the list.
+  function priorityWeight(section){
+    const rank = PRIORITY_ORDER.indexOf(section);
+    if(rank === -1) return 1; // unknown section (shouldn't happen) falls back to lowest weight
+    return PRIORITY_ORDER.length - rank;
+  }
+
+  function saveStats(){ /* stats are session-only by design; nothing to persist */ }
+
+  // ---------------- DOM refs ----------------
+  const qArea = document.getElementById('qArea');
+  const nextBtn = document.getElementById('nextBtn');
+  const topicFilter = document.getElementById('topicFilter');
+  const toggleBank = document.getElementById('toggleBank');
+  const toggleGen = document.getElementById('toggleGen');
+  const toggleConcept = document.getElementById('toggleConcept');
+  const toggleNumeric = document.getElementById('toggleNumeric');
+  const toggleScenario = document.getElementById('toggleScenario');
+
+  // ---------------- Setup source toggles ----------------
+  const bankQs = (window.QUESTION_BANK || []);
+  const genConcept = (window.GENERATED_CONCEPT_QUESTIONS || []);
+  const genTemplates = (window.GENERATED_TEMPLATES || []);
+
+  // The set of sections that actually exist in question_bank.js — this is the
+  // single source of truth for "what topics exist". The topic dropdown is built
+  // from exactly this set, and generated-content questions/templates whose section
+  // isn't in this set are never shown, in either a specific-topic filter or "all"
+  // (some generated questions use sections outside this set, e.g. legal/ethics or
+  // documentation topics with no clinical-topic equivalent in the bank — those stay
+  // reachable only if the bank itself grows a matching section).
+  const bankSections = new Set(bankQs.map(q => q.section));
+  function sectionAllowed(section){
+    return state.topic === 'all' ? bankSections.has(section) : section === state.topic;
+  }
+
+  // Precompute how many bank questions exist per section, so each question's individual
+  // weight can be normalized by its section's size. Without this, a huge lower-priority
+  // section (e.g. 112 questions) would still get drawn more often in total than a small
+  // higher-priority section (e.g. 10 questions), even though the section ranks lower —
+  // because weight was being applied per-question rather than per-topic.
+  const sectionQuestionCounts = {};
+  bankQs.forEach(q => { sectionQuestionCounts[q.section] = (sectionQuestionCounts[q.section] || 0) + 1; });
+  function perQuestionWeight(section){
+    const count = sectionQuestionCounts[section] || 1;
+    return priorityWeight(section) / count;
+  }
+
+
+  // ---------------- Question counts (source panel + qtype panel) ----------------
+  // All of these depend on the selected topic, and re-run whenever the topic
+  // or the source toggles change, so the numbers shown always reflect what's
+  // actually reachable under the current filter combination.
+
+  // Same "does this section actually exist in the bank" rule as sectionAllowed,
+  // but independent of state.topic so it can be evaluated for an arbitrary topic
+  // value (used for both 'all' and every specific topic).
+  function sectionAllowedForTopic(section, topic){
+    return topic === 'all' ? bankSections.has(section) : section === topic;
+  }
+
+  function bankPoolForTopic(topic){
+    return topic === 'all' ? bankQs : bankQs.filter(q => q.section === topic);
+  }
+  function genConceptPoolForTopic(topic){
+    return genConcept.filter(q => sectionAllowedForTopic(q.section, topic));
+  }
+  function genTemplatePoolForTopic(topic){
+    return genTemplates.filter(t => sectionAllowedForTopic(t.section, topic));
+  }
+
+  // A question/template with no qtype (or an empty one) is untagged and counts
+  // toward every type — same rule the actual question-matching logic uses
+  // further down (see matchesQtype), just evaluated for one specific type here.
+  function hasQtype(q, t){
+    if(!q.qtype || !q.qtype.length) return true;
+    return q.qtype.includes(t);
+  }
+
+  function updateCounts(){
+    const topic = state.topic;
+    const bankPool = bankPoolForTopic(topic);
+    const conceptPool = genConceptPoolForTopic(topic);
+    const templatePool = genTemplatePoolForTopic(topic);
+
+    document.getElementById('bankCount').textContent = `${bankPool.length} שאלות קבועות · עובד תמיד בלי אינטרנט`;
+    // All spaces except the one after '+' are non-breaking (&nbsp;), so the
+    // <wbr> right after '+' is the ONLY point the browser is allowed to wrap
+    // at — otherwise it prefers breaking at whichever space best fills the
+    // line (e.g. after "תבניות"), which is what the previous version did.
+    document.getElementById('genCount').innerHTML = `${conceptPool.length}&nbsp;שאלות&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templatePool.length}&nbsp;תבניות&nbsp;מספריות&nbsp;אקראיות`;
+
+    // Per-qtype counts only include the sources that are actually enabled right
+    // now, so they show what the person would really get, not a theoretical max.
+    const countEls = { concept: document.getElementById('countConcept'), numeric: document.getElementById('countNumeric'), scenario: document.getElementById('countScenario') };
+    Object.keys(countEls).forEach(t => {
+      let fixed = 0, templates = 0;
+      if(state.useBank) fixed += bankPool.filter(q => hasQtype(q, t)).length;
+      if(state.useGen){
+        fixed += conceptPool.filter(q => hasQtype(q, t)).length;
+        templates += templatePool.filter(q => hasQtype(q, t)).length;
+      }
+      // Use innerHTML with a <wbr> right after the '+' (not a forced <br>) so the
+      // browser only breaks the line there if it genuinely doesn't fit on one —
+      // short combos ("12 שאלות + 3 תבניות") still render on a single line.
+      // All other spaces are &nbsp; so '+' stays the ONLY allowed break point
+      // (a plain space there would let the browser wrap after "תבניות" instead,
+      // which is the bug this fixes).
+      countEls[t].innerHTML = templates > 0 ? `${fixed}&nbsp;שאלות&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templates}&nbsp;תבניות&nbsp;אקראיות` : `${fixed} שאלות`;
+    });
+  }
+
+  function refreshToggleUI(){
+    toggleBank.classList.toggle('active', state.useBank);
+    toggleGen.classList.toggle('active', state.useGen);
+    toggleBank.querySelector('input').checked = state.useBank;
+    toggleGen.querySelector('input').checked = state.useGen;
+    // Prevent both being off
+    nextBtn.disabled = !(state.useBank || state.useGen);
+    updateCounts();
+  }
+  toggleBank.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(state.useBank && !state.useGen) return; // can't turn off last one
+    state.useBank = !state.useBank;
+    refreshToggleUI();
+  });
+  toggleGen.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(state.useGen && !state.useBank) return;
+    state.useGen = !state.useGen;
+    refreshToggleUI();
+  });
+  refreshToggleUI();
+
+  // ---------------- Setup qtype toggles (concept/numeric/scenario — any combo of 1-3) ----------------
+  const qtypeToggles = { concept: toggleConcept, numeric: toggleNumeric, scenario: toggleScenario };
+  function refreshQtypeToggleUI(){
+    Object.keys(qtypeToggles).forEach(t => {
+      const active = state.qtypes.has(t);
+      qtypeToggles[t].classList.toggle('active', active);
+      qtypeToggles[t].querySelector('input').checked = active;
+    });
+  }
+  Object.keys(qtypeToggles).forEach(t => {
+    qtypeToggles[t].addEventListener('click', (e) => {
+      e.preventDefault();
+      if(state.qtypes.has(t) && state.qtypes.size === 1) return; // can't turn off the last one
+      if(state.qtypes.has(t)) state.qtypes.delete(t); else state.qtypes.add(t);
+      refreshQtypeToggleUI();
+    });
+  });
+  refreshQtypeToggleUI();
+
+  // ---------------- Topic filter ----------------
+  function buildTopicList(){
+    const arr = Array.from(bankSections);
+    // full priority order first, then anything unranked (shouldn't normally happen —
+    // would mean question_bank.js has a section not listed in PRIORITY_ORDER above)
+    const prio = PRIORITY_ORDER.filter(s => arr.includes(s));
+    const rest = arr.filter(s => !PRIORITY_ORDER.includes(s));
+    const ordered = ['all', ...prio, ...rest];
+    topicFilter.innerHTML = '';
+    ordered.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s === 'all' ? 'כל הנושאים' : s;
+      topicFilter.appendChild(opt);
+    });
+  }
+  buildTopicList();
+  topicFilter.addEventListener('change', ()=>{ state.topic = topicFilter.value; updateCounts(); });
+
+  // ---------------- Question selection ----------------
+  function weightedPick(arr, weightFn){
+    const weights = arr.map(weightFn);
+    const total = weights.reduce((a,b)=>a+b,0);
+    let r = Math.random() * total;
+    for(let i=0;i<arr.length;i++){
+      r -= weights[i];
+      if(r <= 0) return arr[i];
+    }
+    return arr[arr.length-1];
+  }
+
+  // Topic filtering here is always exact-match against a real bank section (see
+  // sectionAllowed above) — no substring matching and no "filter came up empty,
+  // silently ignore it and show something else anyway" fallback. If a filter
+  // combination genuinely has no matching questions, pickNextQuestionFiltered
+  // returns null and the caller shows the "no questions found, try widening the
+  // filter" empty state — that's a more honest result than quietly serving an
+  // off-topic question instead.
+  function pickBankQuestion(){
+    const pool = state.topic === 'all' ? bankQs : bankQs.filter(q => q.section === state.topic);
+    if(pool.length === 0) return null;
+    if(state.topic !== 'all') return pool[Math.floor(Math.random()*pool.length)];
+    return weightedPick(pool, q => perQuestionWeight(q.section));
+  }
+
+  function pickGeneratedQuestion(){
+    const conceptPool = genConcept.filter(q => sectionAllowed(q.section));
+    const templatePool = genTemplates.filter(t => sectionAllowed(t.section));
+    if(conceptPool.length === 0 && templatePool.length === 0) return null;
+    // mix concept questions (fixed) and template-generated (infinite), weighted
+    // 50/50 when both are available for the current filter, otherwise whichever exists
+    const useTemplate = templatePool.length > 0 && (conceptPool.length === 0 || Math.random() < 0.5);
+    if(useTemplate){
+      const t = templatePool[Math.floor(Math.random()*templatePool.length)];
+      return t.generate();
+    }
+    return conceptPool[Math.floor(Math.random()*conceptPool.length)];
+  }
+
+  function pickNextQuestion(){
+    let fromBank = state.useBank;
+    let fromGen = state.useGen;
+    if(fromBank && fromGen){
+      fromBank = Math.random() < 0.5;
+      fromGen = !fromBank;
+    }
+    if(fromBank) return pickBankQuestion();
+    if(fromGen) return pickGeneratedQuestion();
+    return null;
+  }
+
+  // A question with no qtype (untagged legacy content) always matches — the filter
+  // only narrows down tagged content, it never hides untagged questions.
+  function matchesQtype(q){
+    if(!q.qtype || !q.qtype.length) return true;
+    return q.qtype.some(t => state.qtypes.has(t));
+  }
+
+  // Retries a bounded number of times: a single pickNextQuestion() call can come back
+  // empty (e.g. it coin-flipped toward the source that has nothing for the current
+  // topic filter) even though the other enabled source does have matching questions,
+  // and separately, a match on source/topic doesn't guarantee a match on qtype. Only
+  // give up (return null, triggering the "no questions found" empty state) once every
+  // retry in the budget failed too.
+  // Same retry budget as before, but now also skips anything asked within the
+  // last NO_REPEAT_WINDOW questions. If the current filter combination is too
+  // narrow to fill that window without a repeat (e.g. a topic with only a
+  // handful of questions), we fall back to the first valid match found rather
+  // than returning null — a repeat is preferable to the "no questions found"
+  // empty state when the filter itself is just small.
+  function pickNextQuestionFiltered(){
+    let fallback = null;
+    for(let i = 0; i < 30; i++){
+      const q = pickNextQuestion();
+      if(q && matchesQtype(q)){
+        if(!fallback) fallback = q;
+        if(!state.recentKeys.includes(questionKey(q))) return q;
+      }
+    }
+    return fallback;
+  }
+
+  // ---------------- Render question ----------------
+  function renderQuestion(q){
+    rememberAsked(q);
+    state.current = q;
+    state.attempt = 0;
+    state.wrongLetters = new Set();
+    state.selectedLetters = new Set();
+    state.answered = false;
+    state.selectedLetter = null;
+
+    const isBank = q.source !== 'generated';
+    const letters = Object.keys(q.options);
+
+    let html = `
+      <div class="qcard">
+        <div class="qmeta">
+          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
+          <span class="tag">${bidiSafe(q.section || '')}</span>
+        </div>
+        <p class="qtext">${bidiSafe(q.question)}</p>
+        ${q.multi ? '<p class="multi-instruction">☑ נא לסמן את כל התשובות הנכונות</p>' : ''}
+        <div class="options" id="optionsWrap">
+    `;
+    letters.forEach(letter => {
+      html += `
+        <div class="opt" data-letter="${letter}">
+          ${q.multi ? '<span class="checkbox"></span>' : ''}
+          <span class="letter">${letter}</span>
+          <span class="opt-text">${bidiSafe(q.options[letter])}</span>
+        </div>
+      `;
+    });
+    html += `
+        </div>
+        <div id="feedbackWrap"></div>
+        <div class="actions" id="checkActionsWrap">
+          <button class="btn btn-primary" id="checkBtn" disabled>בדוק</button>
+        </div>
+        <div class="explain-box" id="explainBox"></div>
+        <div class="actions" id="actionsWrap"></div>
+      </div>
+    `;
+    qArea.innerHTML = html;
+
+    document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+      el.addEventListener('click', () => {
+        const letter = el.getAttribute('data-letter');
+        if(q.multi) toggleOption(letter); else selectOption(letter);
+      });
+    });
+    document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+  }
+
+  function escapeHtml(s){
+    if(s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Isolate two kinds of runs so mixed Hebrew/Latin never gets visually reordered wrong:
+  // (1) A full parenthetical that contains at least one Latin letter, even if it also
+  //     contains Hebrew words inside it (e.g. "(הכנסת CO2 וסילוק O2)") — the WHOLE
+  //     parenthetical, brackets included, is wrapped as one atomic isolate. Partial wrapping
+  //     (only the Latin letters) is what caused brackets to visually detach/reorder.
+  // (2) A plain run of Latin letters/digits/technical punctuation with no surrounding
+  //     parens (e.g. "PSI 1800", "COPD").
+  const BIDI_TOKEN_RE = /(\([^()]*[A-Za-z][^()]*\))|([A-Za-z][A-Za-z0-9\-\/:._%°]*(?:\s[A-Za-z0-9][A-Za-z0-9\-\/:._%°]*)*)/g;
+  function bidiSafe(raw){
+    if(raw === null || raw === undefined) return '';
+    const s = String(raw);
+    let result = '';
+    let lastIndex = 0;
+    let m;
+    BIDI_TOKEN_RE.lastIndex = 0;
+    while((m = BIDI_TOKEN_RE.exec(s))){
+      result += escapeHtml(s.slice(lastIndex, m.index));
+      result += '<bdi>' + escapeHtml(m[0]) + '</bdi>';
+      lastIndex = BIDI_TOKEN_RE.lastIndex;
+    }
+    result += escapeHtml(s.slice(lastIndex));
+    return result;
+  }
+
+  // ---------------- Selection (pick without revealing) ----------------
+  function selectOption(letter){
+    if(state.answered) return;
+    if(state.wrongLetters.has(letter)) return; // already ruled out this attempt
+    state.selectedLetter = letter;
+    document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+      el.classList.toggle('selected', el.getAttribute('data-letter') === letter);
+    });
+    const checkBtn = document.getElementById('checkBtn');
+    if(checkBtn) checkBtn.disabled = false;
+  }
+
+  // ---------------- Toggle (multi-select: check/uncheck any number of options) ----------------
+  function toggleOption(letter){
+    if(state.answered) return;
+    if(state.selectedLetters.has(letter)) state.selectedLetters.delete(letter);
+    else state.selectedLetters.add(letter);
+    document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+      el.classList.toggle('selected', state.selectedLetters.has(el.getAttribute('data-letter')));
+    });
+    const checkBtn = document.getElementById('checkBtn');
+    if(checkBtn) checkBtn.disabled = state.selectedLetters.size === 0;
+  }
+
+  function setsEqual(a, b){
+    if(a.size !== b.size) return false;
+    for(const v of a) if(!b.has(v)) return false;
+    return true;
+  }
+
+  // ---------------- Check (reveal correct/wrong for the selected option) ----------------
+  function checkAnswer(){
+    if(state.answered) return;
+    const q = state.current;
+    if(q && q.multi) checkMultiAnswer();
+    else checkSingleAnswer();
+  }
+
+  function checkSingleAnswer(){
+    if(state.answered) return;
+    const letter = state.selectedLetter;
+    if(!letter) return;
+    const q = state.current;
+    const isCorrect = letter === q.correct;
+    const optEl = document.querySelector(`#optionsWrap .opt[data-letter="${letter}"]`);
+    const feedbackWrap = document.getElementById('feedbackWrap');
+    const checkBtn = document.getElementById('checkBtn');
+    optEl.classList.remove('selected');
+
+    if(isCorrect){
+      state.answered = true;
+      document.querySelectorAll('#optionsWrap .opt').forEach(el => el.classList.add('disabled'));
+      optEl.classList.add('correct-reveal');
+      const msg = state.attempt === 0
+        ? 'נכון בניסיון הראשון! 🎯'
+        : 'נכון בניסיון השני.';
+      feedbackWrap.innerHTML = `<div class="feedback correct">${msg}</div>`;
+      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
+      saveStats();
+      updateStatsUI();
+      document.getElementById('checkActionsWrap').style.display = 'none';
+      showExplanation(q, letter, true);
+      return;
+    }
+
+    // wrong
+    state.wrongLetters.add(letter);
+    state.selectedLetter = null;
+    const totalOptions = Object.keys(q.options).length;
+    const remainingUntried = totalOptions - state.wrongLetters.size; // includes the correct one
+
+    if(state.attempt === 0 && remainingUntried > 1){
+      // still more than one untried option left (correct + at least one other wrong) -> genuine retry makes sense
+      state.attempt = 1;
+      optEl.classList.add('disabled','wrong-try');
+      optEl.style.pointerEvents = 'none';
+      feedbackWrap.innerHTML = `<div class="feedback retry">לא נכון — יש לך עוד הזדמנות אחת. בחר תשובה אחרת ולחץ "בדוק" שוב.</div>`;
+      if(checkBtn) checkBtn.disabled = true; // disabled again until a new option is selected
+    } else {
+      // either second wrong, or only one option remains (must be correct) -> reveal directly,
+      // no point making the person click the only option left just to "prove" it
+      state.answered = true;
+      document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+        el.classList.add('disabled');
+        el.style.pointerEvents = 'none';
+        const l = el.getAttribute('data-letter');
+        if(l === q.correct) el.classList.add('correct-reveal');
+        else if(state.wrongLetters.has(l)) el.classList.add('wrong-reveal');
+      });
+      feedbackWrap.innerHTML = '';
+      document.getElementById('checkActionsWrap').style.display = 'none';
+      state.stats.missed++;
+      saveStats();
+      updateStatsUI();
+      showExplanation(q, letter, false);
+    }
+  }
+
+  // ---------------- Check (multi-select: correct iff selected set exactly equals correct set) ----------------
+  function checkMultiAnswer(){
+    if(state.answered) return;
+    const q = state.current;
+    const correctSet = new Set(q.correct);
+    const isCorrect = setsEqual(state.selectedLetters, correctSet);
+    const feedbackWrap = document.getElementById('feedbackWrap');
+
+    if(isCorrect){
+      state.answered = true;
+      document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+        el.classList.add('disabled');
+        // only the actually-correct letters get the green reveal — everything else stays neutral
+        if(correctSet.has(el.getAttribute('data-letter'))) el.classList.add('correct-reveal');
+      });
+      const msg = state.attempt === 0
+        ? 'נכון בניסיון הראשון! 🎯'
+        : 'נכון בניסיון השני.';
+      feedbackWrap.innerHTML = `<div class="feedback correct">${msg}</div>`;
+      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
+      saveStats();
+      updateStatsUI();
+      document.getElementById('checkActionsWrap').style.display = 'none';
+      showExplanation(q, null, true);
+      return;
+    }
+
+    // wrong
+    if(state.attempt === 0){
+      state.attempt = 1;
+      feedbackWrap.innerHTML = `<div class="feedback retry">לא נכון — יש לך עוד הזדמנות אחת. עדכן/י את הסימונים ולחץ/י "בדוק" שוב.</div>`;
+      // options remain fully interactive for a second attempt
+    } else {
+      state.answered = true;
+      document.querySelectorAll('#optionsWrap .opt').forEach(el => {
+        el.classList.add('disabled');
+        el.style.pointerEvents = 'none';
+        const l = el.getAttribute('data-letter');
+        if(correctSet.has(l)) el.classList.add('correct-reveal');
+        else if(state.selectedLetters.has(l)) el.classList.add('wrong-reveal');
+      });
+      feedbackWrap.innerHTML = '';
+      document.getElementById('checkActionsWrap').style.display = 'none';
+      state.stats.missed++;
+      saveStats();
+      updateStatsUI();
+      showExplanation(q, null, false);
+    }
+  }
+
+  function updateStatsUI(){
+    document.getElementById('statFirst').textContent = state.stats.first;
+    document.getElementById('statSecond').textContent = state.stats.second;
+    document.getElementById('statMissed').textContent = state.stats.missed;
+    document.getElementById('statTotal').textContent = state.stats.first + state.stats.second + state.stats.missed;
+  }
+  updateStatsUI();
+
+  document.getElementById('resetStatsBtn').addEventListener('click', () => {
+    state.stats = { first: 0, second: 0, missed: 0 };
+    saveStats();
+    updateStatsUI();
+  });
+
+  // ---------------- Explanation ----------------
+  function getExplanation(q){
+    return q.explanation || { correct: '', wrong: '' };
+  }
+
+  function showExplanation(q, chosenLetter, wasCorrect){
+    const exp = getExplanation(q);
+    const box = document.getElementById('explainBox');
+    let noteHtml = '';
+    if(q.note){
+      noteHtml = `<div class="note-callout">📌 הערת עדכון מהמקור: ${bidiSafe(q.note)}</div>`;
+    }
+    let inner = '';
+    if(exp.correct){
+      inner += `<div class="eh eh-correct">למה זו התשובה הנכונה</div><p>${bidiSafe(exp.correct)}</p>`;
+    }
+    if(exp.wrong){
+      inner += `<div class="eh eh-wrong">למה האפשרויות האחרות שגויות</div><p>${bidiSafe(exp.wrong)}</p>`;
+    }
+    box.innerHTML = inner + noteHtml;
+    box.classList.add('show');
+
+    const actions = document.getElementById('actionsWrap');
+    actions.innerHTML = `<button class="btn btn-primary" id="nextQBtn">השאלה הבאה</button>`;
+    document.getElementById('nextQBtn').addEventListener('click', goNext);
+  }
+
+  // ---------------- Next question flow ----------------
+  function goNext(){
+    if(!(state.useBank || state.useGen)){
+      qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות מקור שאלות אחד למעלה.</p></div>`;
+      return;
+    }
+    if(state.qtypes.size === 0){
+      qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות סוג שאלה אחד למעלה.</p></div>`;
+      return;
+    }
+    const q = pickNextQuestionFiltered();
+    if(!q){
+      qArea.innerHTML = `<div class="empty-state"><div class="big">😕</div><p>לא נמצאו שאלות בנושא/מקור/סוג שנבחרו. נסה להרחיב את הסינון.</p></div>`;
+      return;
+    }
+    renderQuestion(q);
+    scrollToQuestionTop();
+  }
+
+  // Scrolls so the top of the question card (source/topic tags, then question
+  // text) lands at a small, consistent offset from the top of the viewport —
+  // rather than jumping all the way to the very top of the page (above the
+  // filter panel and stats strip). Since qArea's position in the document is
+  // effectively constant across questions, this puts the new question's tags
+  // in the same on-screen spot every time, instead of yanking the view up to
+  // the page header.
+  function scrollToQuestionTop(){
+    const top = qArea.getBoundingClientRect().top + window.scrollY;
+    const margin = 12;
+    window.scrollTo({ top: Math.max(0, top - margin), behavior: 'smooth' });
+  }
+
+  nextBtn.addEventListener('click', goNext);
+
+})();
+</script>
+
+<script>
+  // Register service worker for offline installability. Relative path so it
+  // works regardless of which subfolder the app is hosted/opened from.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {
+        // registration can fail on file:// origins or unsupported browsers —
+        // the app still works fully, it just won't be installable/offline-cached.
+      });
+    });
+  }
+</script>
+</body>
+</html>
