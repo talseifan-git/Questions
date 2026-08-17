@@ -171,7 +171,7 @@
   .btn-sm{ padding: 8px 14px; font-size: 13px; }
 
   /* ---------- Stats strip ---------- */
-  .stats{ display:flex; gap:10px; margin-bottom:18px; align-items:stretch; flex-wrap:wrap; }
+  .stats{ display:flex; gap:10px; margin-top:8px; margin-bottom:18px; align-items:stretch; flex-wrap:wrap; }
   .stats .btn{ flex-shrink:0; align-self:center; }
   .stat{
     flex:1; background: var(--card); border:1px solid var(--line); border-radius: 10px;
@@ -199,6 +199,7 @@
   }
   .tag.bank{ border-color:#3a5a7a; color:#7fb2e0; }
   .tag.generated{ border-color:#5a3a7a; color:#c199e8; }
+  .tag.qid{ color: var(--muted-2); border-color: var(--line); font-weight:500; }
   .qtext{ font-size: 18.5px; font-weight: 600; margin: 0 0 20px; line-height:1.55; white-space: pre-wrap; }
   .multi-instruction{
     font-size: 13.5px; color: var(--amber); font-weight:700; margin: -12px 0 16px;
@@ -352,19 +353,19 @@
     </div>
   </div>
 
+  <div id="qArea">
+    <div class="empty-state">
+      <div class="big">🩺</div>
+      <p>לחץ "שאלה הבאה" כדי להתחיל.</p>
+    </div>
+  </div>
+
   <div class="stats">
     <div class="stat green"><b id="statFirst">0</b><span>נכון בניסיון ראשון</span></div>
     <div class="stat amber"><b id="statSecond">0</b><span>נכון בניסיון שני</span></div>
     <div class="stat red"><b id="statMissed">0</b><span>לא נכון</span></div>
     <div class="stat"><b id="statTotal">0</b><span>סה"כ נענו</span></div>
     <button class="btn btn-ghost btn-sm" id="resetStatsBtn" title="איפוס הספירה">איפוס</button>
-  </div>
-
-  <div id="qArea">
-    <div class="empty-state">
-      <div class="big">🩺</div>
-      <p>לחץ "שאלה הבאה" כדי להתחיל.</p>
-    </div>
   </div>
 
   <footer>
@@ -425,7 +426,8 @@
     'פגיעות סביבתיות',
     'ציוד רפואי',
     'עבודת הצוות',
-    'קבלת החלטות ודיווחים'
+    'קבלת החלטות ודיווחים',
+    'מענה מד"א בשעת חירום'
   ];
   // Highest-priority section gets the largest weight, decreasing linearly down the list.
   function priorityWeight(section){
@@ -695,12 +697,17 @@
 
     const isBank = q.source !== 'generated';
     const letters = Object.keys(q.options);
+    // Template-generated numeric questions get a fresh random id every time they're
+    // generated (see questionKey above) — show the stable template id instead so the
+    // same displayed id always corresponds to the same underlying question/template.
+    const qid = q.template || q.id || '';
 
     let html = `
       <div class="qcard">
         <div class="qmeta">
           <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
+          ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
         </div>
         <p class="qtext">${bidiSafe(q.question)}</p>
         ${q.multi ? '<p class="multi-instruction">☑ נא לסמן את כל התשובות הנכונות</p>' : ''}

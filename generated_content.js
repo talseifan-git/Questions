@@ -82,7 +82,7 @@ function generatePediatricSBPQuestion() {
   return {
     id: 'gen_pedsbp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
     source: 'generated',
-    template: 'pediatric_sbp_estimate',
+    template: 'GCT_0001',
     qtype: ['numeric'],
     multi: false,
     section: 'טראומה',
@@ -121,7 +121,7 @@ function generateHemorrhagicShockClassQuestion() {
   return {
     id: 'gen_hemclass_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
     source: 'generated',
-    template: 'hemorrhagic_shock_class',
+    template: 'GCT_0002',
     qtype: ['numeric'],
     multi: false,
     section: 'טראומה',
@@ -171,7 +171,7 @@ function generateBurnBSAQuestion() {
   return {
     id: 'gen_burnbsa_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
     source: 'generated',
-    template: 'burn_bsa_rule_of_nines',
+    template: 'GCT_0003',
     qtype: ['numeric'],
     multi: false,
     section: 'טראומה',
@@ -215,7 +215,7 @@ function generateCPRRatioQuestion() {
   return {
     id: 'gen_cprratio_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
     source: 'generated',
-    template: 'cpr_ratio_by_age',
+    template: 'GCT_0004',
     qtype: ['numeric'],
     multi: false,
     section: 'החייאה',
@@ -267,7 +267,7 @@ function generateEpinephrineDoseQuestion() {
   return {
     id: genId('gen_epidose'),
     source: 'generated',
-    template: 'epinephrine_anaphylaxis_dose',
+    template: 'GCT_0005',
     qtype: ['numeric'],
     multi: false,
     section: 'הטיפול בחולה',
@@ -299,7 +299,7 @@ function generateMinuteVentilationQuestion() {
   return {
     id: genId('gen_minvent'),
     source: 'generated',
-    template: 'minute_ventilation_calc',
+    template: 'GCT_0006',
     qtype: ['numeric'],
     multi: false,
     section: 'אנטומיה ופיזיולוגיה',
@@ -334,7 +334,7 @@ function generateBloodVolumeQuestion() {
   return {
     id: genId('gen_bloodvol'),
     source: 'generated',
-    template: 'blood_volume_estimate',
+    template: 'GCT_0007',
     qtype: ['numeric'],
     multi: false,
     section: 'אנטומיה ופיזיולוגיה',
@@ -367,7 +367,7 @@ function generateCardiacOutputQuestion() {
   return {
     id: genId('gen_co'),
     source: 'generated',
-    template: 'cardiac_output_calc',
+    template: 'GCT_0008',
     qtype: ['numeric'],
     multi: false,
     section: 'אנטומיה ופיזיולוגיה',
@@ -411,7 +411,7 @@ function generateApgarQuestion() {
   return {
     id: genId('gen_apgar'),
     source: 'generated',
-    template: 'apgar_score_calc',
+    template: 'GCT_0009',
     qtype: ['numeric'],
     multi: false,
     section: 'לידה וגניקולוגיה',
@@ -448,7 +448,7 @@ function generateFluidBolusQuestion() {
   return {
     id: genId('gen_fluidbolus'),
     source: 'generated',
-    template: 'pediatric_fluid_bolus',
+    template: 'GCT_0010',
     qtype: ['numeric'],
     multi: false,
     section: 'הטיפול בחולה',
@@ -485,7 +485,7 @@ function generateOxygenThresholdQuestion() {
   return {
     id: genId('gen_o2threshold'),
     source: 'generated',
-    template: 'oxygen_therapy_threshold',
+    template: 'GCT_0011',
     qtype: ['numeric'],
     multi: false,
     section: 'הטיפול בחולה',
@@ -521,7 +521,7 @@ function generateSpinalLoadQuestion() {
   return {
     id: genId('gen_spinalload'),
     source: 'generated',
-    template: 'spinal_disc_load_by_posture',
+    template: 'GCT_0012',
     qtype: ['numeric'],
     multi: false,
     section: 'עבודת הצוות',
@@ -543,18 +543,18 @@ function generateSpinalLoadQuestion() {
 // static metadata so the UI can count reachable questions per qtype without
 // having to call generate() just to inspect the type.
 window.GENERATED_TEMPLATES = [
-  { id: 'pediatric_sbp_estimate', label: 'ל"ד סיסטולי משוער בילד', section: 'טראומה', qtype: ['numeric'], generate: generatePediatricSBPQuestion },
-  { id: 'hemorrhagic_shock_class', label: 'דרגת הלם תת-נפחי', section: 'טראומה', qtype: ['numeric'], generate: generateHemorrhagicShockClassQuestion },
-  { id: 'burn_bsa_rule_of_nines', label: 'כלל התשיעיות בכוויות', section: 'טראומה', qtype: ['numeric'], generate: generateBurnBSAQuestion },
-  { id: 'cpr_ratio_by_age', label: 'יחס עיסויים:הנשמות לפי גיל', section: 'החייאה', qtype: ['numeric'], generate: generateCPRRatioQuestion },
-{ id: 'epinephrine_anaphylaxis_dose', label: 'מינון אדרנלין באנפילקסיס', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateEpinephrineDoseQuestion },
-  { id: 'minute_ventilation_calc', label: 'נפח נשימה בדקה', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateMinuteVentilationQuestion },
-  { id: 'blood_volume_estimate', label: 'הערכת נפח דם לפי משקל', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateBloodVolumeQuestion },
-  { id: 'cardiac_output_calc', label: 'חישוב תפוקת לב', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateCardiacOutputQuestion },
-  { id: 'apgar_score_calc', label: 'חישוב ציון אפגר', section: 'לידה וגניקולוגיה', qtype: ['numeric'], generate: generateApgarQuestion },
-  { id: 'pediatric_fluid_bolus', label: 'נפח בולוס נוזלים לפי משקל', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateFluidBolusQuestion },
-  { id: 'oxygen_therapy_threshold', label: 'סף מתן חמצן/הנשמה', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateOxygenThresholdQuestion },
-  { id: 'spinal_disc_load_by_posture', label: 'עומס על הגב לפי תנוחת הרמה', section: 'עבודת הצוות', qtype: ['numeric'], generate: generateSpinalLoadQuestion }
+  { id: 'GCT_0001', label: 'ל"ד סיסטולי משוער בילד', section: 'טראומה', qtype: ['numeric'], generate: generatePediatricSBPQuestion },
+  { id: 'GCT_0002', label: 'דרגת הלם תת-נפחי', section: 'טראומה', qtype: ['numeric'], generate: generateHemorrhagicShockClassQuestion },
+  { id: 'GCT_0003', label: 'כלל התשיעיות בכוויות', section: 'טראומה', qtype: ['numeric'], generate: generateBurnBSAQuestion },
+  { id: 'GCT_0004', label: 'יחס עיסויים:הנשמות לפי גיל', section: 'החייאה', qtype: ['numeric'], generate: generateCPRRatioQuestion },
+{ id: 'GCT_0005', label: 'מינון אדרנלין באנפילקסיס', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateEpinephrineDoseQuestion },
+  { id: 'GCT_0006', label: 'נפח נשימה בדקה', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateMinuteVentilationQuestion },
+  { id: 'GCT_0007', label: 'הערכת נפח דם לפי משקל', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateBloodVolumeQuestion },
+  { id: 'GCT_0008', label: 'חישוב תפוקת לב', section: 'אנטומיה ופיזיולוגיה', qtype: ['numeric'], generate: generateCardiacOutputQuestion },
+  { id: 'GCT_0009', label: 'חישוב ציון אפגר', section: 'לידה וגניקולוגיה', qtype: ['numeric'], generate: generateApgarQuestion },
+  { id: 'GCT_0010', label: 'נפח בולוס נוזלים לפי משקל', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateFluidBolusQuestion },
+  { id: 'GCT_0011', label: 'סף מתן חמצן/הנשמה', section: 'הטיפול בחולה', qtype: ['numeric'], generate: generateOxygenThresholdQuestion },
+  { id: 'GCT_0012', label: 'עומס על הגב לפי תנוחת הרמה', section: 'עבודת הצוות', qtype: ['numeric'], generate: generateSpinalLoadQuestion }
 ];
 
 // ============================================================
@@ -564,7 +564,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 
   // ---------------- CONCEPT QUESTIONS ----------------
   {
-    id: 'concept_authority_refuse',
+    id: 'GC_0001',
     source: 'generated',
     qtype: ['concept'],
     section: 'עבודת הצוות',
@@ -583,7 +583,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_negligence_elements',
+    id: 'GC_0002',
     source: 'generated',
     qtype: ['concept'],
     section: 'קבלת החלטות ודיווחים',
@@ -602,7 +602,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_documentation_burden',
+    id: 'GC_0003',
     source: 'generated',
     qtype: ['concept'],
     section: 'קבלת החלטות ודיווחים',
@@ -621,7 +621,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_implied_consent',
+    id: 'GC_0004',
     source: 'generated',
     qtype: ['concept'],
     section: 'קבלת החלטות ודיווחים',
@@ -640,7 +640,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_diffusion_osmosis',
+    id: 'GC_0005',
     source: 'generated',
     qtype: ['concept'],
     section: 'אנטומיה ופיזיולוגיה',
@@ -659,7 +659,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_hypoxia_hypoxemia',
+    id: 'GC_0006',
     source: 'generated',
     qtype: ['concept'],
     section: 'אנטומיה ופיזיולוגיה',
@@ -678,7 +678,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_epidural_subdural',
+    id: 'GC_0007',
     source: 'generated',
     qtype: ['concept'],
     section: 'טראומה',
@@ -697,7 +697,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_pulse_check_infant',
+    id: 'GC_0008',
     source: 'generated',
     qtype: ['concept'],
     section: 'החייאה',
@@ -716,7 +716,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_shock_skin_multi',
+    id: 'GC_0009',
     source: 'generated',
     qtype: ['concept'],
     section: 'הטיפול בחולה',
@@ -735,7 +735,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_burn_3rd_degree_pain',
+    id: 'GC_0010',
     source: 'generated',
     qtype: ['concept'],
     section: 'טראומה',
@@ -754,7 +754,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_co_poisoning_saturation',
+    id: 'GC_0011',
     source: 'generated',
     qtype: ['concept'],
     section: 'הטיפול בחולה',
@@ -773,7 +773,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_opioid_overdose_triad',
+    id: 'GC_0012',
     source: 'generated',
     qtype: ['concept'],
     section: 'הטיפול בחולה',
@@ -792,7 +792,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_pediatric_airway_insertion',
+    id: 'GC_0013',
     source: 'generated',
     qtype: ['concept'],
     section: 'טראומה',
@@ -811,7 +811,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'concept_stroke_time_documentation',
+    id: 'GC_0014',
     source: 'generated',
     qtype: ['concept'],
     section: 'הטיפול בחולה',
@@ -832,7 +832,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 
   // ---------------- SCENARIO-ACTION QUESTIONS ----------------
   {
-    id: 'scenario_shoulder_dystocia',
+    id: 'GC_0015',
     source: 'generated',
     qtype: ['scenario'],
     section: 'לידה וגניקולוגיה',
@@ -851,7 +851,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'scenario_cord_prolapse',
+    id: 'GC_0016',
     source: 'generated',
     qtype: ['scenario'],
     section: 'לידה וגניקולוגיה',
@@ -870,7 +870,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'scenario_eclampsia_seizure',
+    id: 'GC_0017',
     source: 'generated',
     qtype: ['scenario'],
     section: 'לידה וגניקולוגיה',
@@ -889,7 +889,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'scenario_pediatric_hypotension_trauma',
+    id: 'GC_0018',
     source: 'generated',
     qtype: ['scenario', 'numeric'],
     section: 'טראומה',
@@ -908,7 +908,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'scenario_newborn_resuscitation',
+    id: 'GC_0019',
     source: 'generated',
     qtype: ['scenario'],
     section: 'החייאה',
@@ -927,7 +927,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
     },
   },
   {
-    id: 'scenario_co_household',
+    id: 'GC_0020',
     source: 'generated',
     qtype: ['scenario'],
     section: 'הטיפול בחולה',
@@ -953,7 +953,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: עבודת הצוות
 // ---------------------------------------------------------
 {
-  id: 'concept_authority_hierarchy_order',
+  id: 'GC_0021',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות', multi: true,
   question: 'אילו מהפעולות הבאות נמצאות בסמכות חובש רפואת חירום (EMT-B), לפי היררכיית הסמכויות?',
   options: {
@@ -969,7 +969,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_thought_fixation',
+  id: 'GC_0022',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות', multi: true,
   question: 'אילו מהבאים נחשבים לסוגי "קיבעון מחשבתי" שיש להיזהר מהם בעבודת צוות?',
   options: {
@@ -985,7 +985,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_team_leader_role',
+  id: 'GC_0023',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות',
   question: 'מהו המיקוד העיקרי של ראש הצוות במהלך אירוע, לפי העקרונות שנלמדו?',
   multi: false,
@@ -1002,7 +1002,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_clear_instruction',
+  id: 'GC_0024',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות',
   question: 'מהם מאפייני "הוראה ברורה" בעבודת צוות באירוע חירום?',
   multi: false,
@@ -1019,7 +1019,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_high_stress_no_experiment',
+  id: 'GC_0025',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות',
   question: 'מדוע אין "להתאמן" או "לבדוק יכולות אישיות" בזמן החייאה או טראומה קשה בשטח?',
   multi: false,
@@ -1036,7 +1036,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_mci_documentation',
+  id: 'GC_0026',
   source: 'generated', qtype: ['concept'], section: 'עבודת הצוות',
   question: 'באירוע שבו השתתפו גם צוות אמבולנס רגיל וגם צוות אט"ן, מי אחראי על מילוי הדיווח הרפואי?',
   multi: false,
@@ -1057,7 +1057,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: קבלת החלטות ודיווחים
 // ---------------------------------------------------------
 {
-  id: 'concept_terminology_prefixes',
+  id: 'GC_0027',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים', multi: true,
   question: 'אילו מהצירופים הבאים בין קידומת/סיומת לתרגום נכונים?',
   options: {
@@ -1073,7 +1073,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_medication_categories',
+  id: 'GC_0028',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים',
   question: 'מטופל מציג בביתו כדורי ונטולין (סלבוטמול) וסינגולייר. לאיזו מחלת רקע סביר שהוא מטופל?',
   multi: false,
@@ -1090,7 +1090,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_anticoagulant_vs_antiaggregant',
+  id: 'GC_0029',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים',
   question: 'מה ההבדל בין תרופות "מונעות צבירה" (Anti-aggregants) ל"נוגדות קרישה" (Anti-coagulants)?',
   multi: false,
@@ -1107,7 +1107,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_route_abbreviations',
+  id: 'GC_0030',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים', multi: true,
   question: 'אילו מהצירופים הבאים מייצגים נכון דרך מתן תרופה?',
   options: {
@@ -1123,7 +1123,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_written_vs_verbal_documentation',
+  id: 'GC_0031',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים',
   question: 'מבחינה משפטית, מה עדיף — הצהרה מילולית בדיעבד או תיעוד כתוב בזמן אמת?',
   multi: false,
@@ -1140,7 +1140,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_consent_types',
+  id: 'GC_0032',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים', multi: true,
   question: 'אילו מהבאים הם סוגי הסכמה לטיפול רפואי, לפי הרלוונטי לעבודת חובש בשטח?',
   options: {
@@ -1156,7 +1156,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_media_confidentiality',
+  id: 'GC_0033',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים',
   question: 'צוות מד"א הגיע לזירת תאונת דרכים ובה איש כוחות ביטחון פצוע. עיתונאי מבקש פרטים. מה מותר למסור?',
   multi: false,
@@ -1173,7 +1173,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_crime_scene_evidence',
+  id: 'GC_0034',
   source: 'generated', qtype: ['concept'], section: 'קבלת החלטות ודיווחים', multi: true,
   question: 'אילו מהכללים הבאים נכונים לגבי טיפול בזירת פשע?',
   options: {
@@ -1193,7 +1193,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: אנטומיה ופיזיולוגיה
 // ---------------------------------------------------------
 {
-  id: 'concept_neuron_structure',
+  id: 'GC_0035',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו סדר העברת האות בנוירון בודד, מרגע הקליטה ועד ההעברה לתא הבא?',
   multi: false,
@@ -1210,7 +1210,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_sympathetic_parasympathetic',
+  id: 'GC_0036',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה', multi: true,
   question: 'אילו מהבאים מאפיינים את המערכת הסימפטטית ("Fight or Flight")?',
   options: {
@@ -1226,7 +1226,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_brain_meningeal_layers',
+  id: 'GC_0037',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו סדר שכבות ההגנה על המוח, מבחוץ פנימה?',
   multi: false,
@@ -1243,7 +1243,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hemorrhage_space_type',
+  id: 'GC_0038',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה', multi: true,
   question: 'התאם בין החלל האנטומי לסוג הדימום הפוטנציאלי: אילו מהצירופים הבאים נכונים?',
   options: {
@@ -1259,7 +1259,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pleura_function',
+  id: 'GC_0039',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו תפקיד הפלאורה ("קרום הריאה") בתהליך הנשימה?',
   multi: false,
@@ -1276,7 +1276,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_respiratory_control',
+  id: 'GC_0040',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו הגירוי העיקרי לנשימה אצל אדם בריא, ובמה שונה חולה COPD כרוני מבחינה זו?',
   multi: false,
@@ -1293,7 +1293,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_blood_components',
+  id: 'GC_0041',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהם שני המרכיבים העיקריים של הדם, ומהו היחס המשוער ביניהם?',
   multi: false,
@@ -1310,7 +1310,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_wbc_types',
+  id: 'GC_0042',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'איזה סוג תאי דם לבנים (WBC) הוא השכיח ביותר בדם, מבין הבאים?',
   multi: false,
@@ -1327,7 +1327,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_blood_type_universal',
+  id: 'GC_0043',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מיהו התורם האוניברסלי ומיהו המקבל האוניברסלי בסיווג סוגי הדם ABO+Rh?',
   multi: false,
@@ -1344,7 +1344,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_heart_chambers_flow',
+  id: 'GC_0044',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו ההבדל בין הדם בלב ימין לדם בלב שמאל?',
   multi: false,
@@ -1361,7 +1361,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_coronary_filling_phase',
+  id: 'GC_0045',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'באיזה שלב של מחזור הלב מתמלאים כלי הדם הקורונריים (המזינים את שריר הלב עצמו)?',
   multi: false,
@@ -1378,7 +1378,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_spine_vertebrae_count',
+  id: 'GC_0046',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו מספר החוליות בכל חלק של עמוד השדרה?',
   multi: false,
@@ -1395,7 +1395,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_skin_layers',
+  id: 'GC_0047',
   source: 'generated', qtype: ['concept'], section: 'אנטומיה ופיזיולוגיה',
   question: 'מהו סדר שכבות העור מבחוץ פנימה?',
   multi: false,
@@ -1416,7 +1416,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: החייאה
 // ---------------------------------------------------------
 {
-  id: 'concept_gasping_is_cardiac_arrest',
+  id: 'GC_0048',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'מטופל מחוסר הכרה מציג נשימות איטיות, קצרות ולא סדירות שנראות כמו "נחירות" (Gasping). מה המשמעות הקלינית?',
   multi: false,
@@ -1433,7 +1433,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_single_rescuer_child_sequence',
+  id: 'GC_0049',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'מטפל יחיד מזהה דום לב בילד ואין באפשרותו לקרוא לעזרה תוך כדי טיפול. מה סדר הפעולות הנכון?',
   multi: false,
@@ -1450,7 +1450,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_compression_depth_by_age',
+  id: 'GC_0050',
   source: 'generated', qtype: ['concept'], section: 'החייאה', multi: true,
   question: 'אילו מהעומקים הבאים תואמים נכון לעיסויי חזה לפי קבוצת גיל?',
   options: {
@@ -1466,7 +1466,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pulse_check_by_age',
+  id: 'GC_0051',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'היכן בודקים דופק מרכזי בילד (לא תינוק), במסגרת החייאה?',
   multi: false,
@@ -1483,7 +1483,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_defib_pad_placement_children',
+  id: 'GC_0052',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'כיצד ממקמים מדבקות דפיברילטור בילדים קטנים/תינוקות, בשונה ממבוגר?',
   multi: false,
@@ -1500,7 +1500,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hands_only_cpr',
+  id: 'GC_0053',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'מטפל יחיד ללא הכשרה רפואית מזהה דום לב במבוגר ברחוב. איזו גישת החייאה מקובלת עבורו?',
   multi: false,
@@ -1517,7 +1517,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_special_cpr_modifications',
+  id: 'GC_0054',
   source: 'generated', qtype: ['concept'], section: 'החייאה', multi: true,
   question: 'אילו מההתאמות הבאות להחייאה במצבים מיוחדים נכונות?',
   options: {
@@ -1533,7 +1533,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_newborn_evaluation_questions',
+  id: 'GC_0055',
   source: 'generated', qtype: ['concept'], section: 'החייאה',
   question: 'מהן שלוש שאלות ההערכה המיידית לילוד לאחר הלידה?',
   multi: false,
@@ -1550,7 +1550,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_choking_infant',
+  id: 'GC_0056',
   source: 'generated', qtype: ['scenario'], section: 'החייאה',
   question: 'תינוק בן 6 חודשים חונק, לא משמיע קול, לא משתעל ולא בוכה. הוא בהכרה. מה תעשה?',
   multi: false,
@@ -1567,7 +1567,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_bystander_defib_witnessed',
+  id: 'GC_0057',
   source: 'generated', qtype: ['scenario'], section: 'החייאה',
   question: 'עדים ראו אדם קורס פתאום לרצפה בדום לב מול עיניהם ("קריסה נצפית"). דפיברילטור זמין באתר. מה סדר הפעולות המומלץ?',
   multi: false,
@@ -1588,7 +1588,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: הטיפול בחולה
 // ---------------------------------------------------------
 {
-  id: 'concept_fast_vs_cpss',
+  id: 'GC_0058',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם ארבעת המרכיבים של בדיקת FAST לחשד שבץ מוחי, ומה חשוב לזכור לגביה?',
   multi: false,
@@ -1605,7 +1605,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_avpu_scale',
+  id: 'GC_0059',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם ארבעת השלבים בסולם AVPU להערכת מצב הכרה?',
   multi: false,
@@ -1622,7 +1622,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hypoglycemia_threshold',
+  id: 'GC_0060',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהו הערך המקובל להגדרת היפוגליקמיה?',
   multi: false,
@@ -1639,7 +1639,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_samples_mnemonic',
+  id: 'GC_0061',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מה מייצג הראשי-תיבות SAMPLE באנמנזה רפואית?',
   multi: false,
@@ -1656,7 +1656,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pulmonary_edema_positioning',
+  id: 'GC_0062',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מטופל עם בצקת ריאות חריפה (אי ספיקת לב שמאל) — מהי התנוחה הנכונה לטיפול בו?',
   multi: false,
@@ -1673,7 +1673,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_medical_evacuation_criteria',
+  id: 'GC_0063',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה', multi: true,
   question: 'אילו מהמצבים הבאים מתאימים לפינוי מסוק, לפי הקריטריונים שנלמדו?',
   options: {
@@ -1689,7 +1689,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_refusal_of_treatment',
+  id: 'GC_0064',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מטופל בגיר וכשיר מסרב לפינוי לבי"ח, למרות שהמלצת הצוות היא פינוי. מה על הצוות לעשות?',
   multi: false,
@@ -1710,7 +1710,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: מצבי חירום נשימתיים
 // ---------------------------------------------------------
 {
-  id: 'concept_asthma_pathophysiology',
+  id: 'GC_0065',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהו המנגנון הפתופיזיולוגי המרכזי בהתקף אסתמה?',
   multi: false,
@@ -1727,7 +1727,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_copd_two_phenotypes',
+  id: 'GC_0066',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מה ההבדל הקליני בין "הנשפן הוורוד" (נפחת) ל"הנפחן הכחול" (ברונכיטיס כרוני)?',
   multi: false,
@@ -1744,7 +1744,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_nebulizer_solution',
+  id: 'GC_0067',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם התנאים למתן תמיסת אינהלציה (ונטולין+אירובנט+סליין) ע"י חובש בשטח?',
   multi: false,
@@ -1761,7 +1761,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pe_risk_factors',
+  id: 'GC_0068',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה', multi: true,
   question: 'אילו מהבאים הם גורמי סיכון מוכרים לתסחיף ריאתי (PE)?',
   options: {
@@ -1777,7 +1777,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pe_hemodynamic_treatment',
+  id: 'GC_0069',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מטופל עם חשד לתסחיף ריאתי (PE) מציג לחץ דם סיסטולי 82. מהי הגישה הנכונה למתן נוזלים במקרה זה?',
   multi: false,
@@ -1794,7 +1794,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hyperventilation_bagging_danger',
+  id: 'GC_0070',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מדוע אין לחסום את פני המטופל בשקית (Paper Bag Rebreathing) כטיפול באוורור יתר (Hyperventilation)?',
   multi: false,
@@ -1811,7 +1811,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_asthma_severe_attack',
+  id: 'GC_0071',
   source: 'generated', qtype: ['scenario'], section: 'הטיפול בחולה',
   question: 'הוזעקת לנער בן 16 עם היסטוריה של אסתמה, יושב בתנוחת Tripod, מתקשה להשלים משפט, עם צפצופים ושימוש בשרירי עזר. מה תעשה?',
   multi: false,
@@ -1832,7 +1832,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: מחלות לב וכלי דם
 // ---------------------------------------------------------
 {
-  id: 'concept_atherosclerosis_risk_factors',
+  id: 'GC_0072',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה', multi: true,
   question: 'אילו מהבאים הם גורמי סיכון "נשלטים" לטרשת עורקים (Atherosclerosis)?',
   options: {
@@ -1848,7 +1848,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_unstable_angina_vs_stable',
+  id: 'GC_0073',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'במה נבדלת תעוקת חזה בלתי-יציבה מתעוקת חזה יציבה, ומה המשמעות הטיפולית?',
   multi: false,
@@ -1865,7 +1865,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_mi_atypical_populations',
+  id: 'GC_0074',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה', multi: true,
   question: 'אילו מהאוכלוסיות הבאות עלולות להציג תסמינים לא-טיפוסיים או מאוחרים ל-MI?',
   options: {
@@ -1881,7 +1881,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_aspirin_contraindications',
+  id: 'GC_0075',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה', multi: true,
   question: 'אילו מהבאים מהווים התוויית נגד למתן אספירין ללעיסה בחשד ACS?',
   options: {
@@ -1897,7 +1897,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_aortic_dissection_signs',
+  id: 'GC_0076',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם הסימנים המחשידים לדיסקציית אאורטה, באבחנה מבדלת של כאב חזה?',
   multi: false,
@@ -1914,7 +1914,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_stable_angina_response',
+  id: 'GC_0077',
   source: 'generated', qtype: ['scenario'], section: 'הטיפול בחולה',
   question: 'מטופל מדווח על כאב חזה לוחץ שהחל במאמץ, נחלש לאחר 10 דקות מנוחה, ותואם לו לתעוקת חזה יציבה מוכרת מהעבר. מה גישת הטיפול הראשונית?',
   multi: false,
@@ -1935,7 +1935,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: טראומה
 // ---------------------------------------------------------
 {
-  id: 'concept_death_waves_trauma',
+  id: 'GC_0078',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מהם "שלושת גלי התמותה" בטראומה, ומהו טווח הזמן של הגל הראשון?',
   multi: false,
@@ -1952,7 +1952,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_golden_ten_minutes',
+  id: 'GC_0079',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מה מוגדר כ"10 דקות הזהב" בטיפול בטראומה?',
   multi: false,
@@ -1969,7 +1969,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_trauma_airway_technique',
+  id: 'GC_0080',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'כיצד פותחים נתיב אוויר בחשד לטראומה, בשונה ממטופל ללא טראומה?',
   multi: false,
@@ -1986,7 +1986,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pneumothorax_types',
+  id: 'GC_0081',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מה ההבדל בין חזה אוויר בלחץ (Tension Pneumothorax) לחזה אוויר פשוט?',
   multi: false,
@@ -2003,7 +2003,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_cardiac_tamponade_signs',
+  id: 'GC_0082',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מהם הסימנים הקלאסיים לטמפונדה לבבית (נוזל בין הפריקרד ללב) בעקבות טראומה?',
   multi: false,
@@ -2020,7 +2020,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_abdominal_blood_volume',
+  id: 'GC_0083',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'כמה דם יכולה הבטן להכיל במבוגר, ללא סימני נפיחות חיצוניים ניכרים?',
   multi: false,
@@ -2037,7 +2037,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pregnant_trauma_shock_delay',
+  id: 'GC_0084',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מדוע יציבות המודינמית של אישה בהריון בטראומה אינה שוללת מצוקת עובר?',
   multi: false,
@@ -2054,7 +2054,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_pediatric_airway_anatomy_trauma',
+  id: 'GC_0085',
   source: 'generated', qtype: ['concept'], section: 'טראומה', multi: true,
   question: 'אילו מההבדלים האנטומיים הבאים בילדים (לעומת מבוגר) רלוונטיים לטיפול בטראומה?',
   options: {
@@ -2070,7 +2070,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_elderly_trauma_risk',
+  id: 'GC_0086',
   source: 'generated', qtype: ['concept'], section: 'טראומה', multi: true,
   question: 'אילו מהגורמים הבאים משפיעים על חומרת טראומה בקשישים (מעל 65)?',
   options: {
@@ -2086,7 +2086,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_fracture_open_closed',
+  id: 'GC_0087',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'מה ההבדל בין שבר סגור לשבר פתוח, ומה סדר הטיפול הבסיסי בשבר?',
   multi: false,
@@ -2103,7 +2103,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_tension_pneumothorax_chest_trauma',
+  id: 'GC_0088',
   source: 'generated', qtype: ['scenario'], section: 'טראומה',
   question: 'נפגע טראומה בחזה מציג מצוקה נשימתית חמורה, כיחלון, גודש ורידי צוואר, ולחץ דם יורד בהתמדה. מה תחשד ומה תעשה?',
   multi: false,
@@ -2120,7 +2120,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_flail_chest',
+  id: 'GC_0089',
   source: 'generated', qtype: ['scenario'], section: 'טראומה',
   question: 'נפגע תאונת דרכים מציג קטע בית חזה שנע בכיוון הפוך לשאר בית החזה בזמן הנשימה. מה תחשד וכיצד תטפל?',
   multi: false,
@@ -2137,7 +2137,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_open_abdominal_evisceration',
+  id: 'GC_0090',
   source: 'generated', qtype: ['scenario'], section: 'טראומה',
   question: 'נפגע דקירה בבטן מציג איבר פנימי (חלק ממעי) הבולט החוצה מהפצע. מה תעשה?',
   multi: false,
@@ -2154,7 +2154,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_pediatric_fall_high',
+  id: 'GC_0091',
   source: 'generated', qtype: ['scenario', 'numeric'], section: 'טראומה',
   question: 'ילד בן 4 נפל מקומה שנייה. הוא בהכרה, בוכה, ל"ד סיסטולי נמדד 76 מ"מ כספית, דופק 150. מה הסף לתת-לחץ דם עבורו, והאם ערכיו מהווים חשד להלם?',
   multi: false,
@@ -2171,7 +2171,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_burn_before_fracture_priority',
+  id: 'GC_0092',
   source: 'generated', qtype: ['concept'], section: 'טראומה',
   question: 'בסבב המשלים (השניוני) בטראומה, מהו סדר הטיפול הנכון בפגיעות עור/שלד תחת שלב D?',
   multi: false,
@@ -2192,7 +2192,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: מצבי חירום נוירולוגיים ומטבוליים
 // ---------------------------------------------------------
 {
-  id: 'concept_stroke_ischemic_vs_hemorrhagic',
+  id: 'GC_0093',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'האם ניתן להבחין בשטח בין שבץ איסכמי להמורגי? מה המשמעות לטיפול?',
   multi: false,
@@ -2209,7 +2209,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_tia_definition',
+  id: 'GC_0094',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהו TIA (שבץ חולף), ולאיזה סוג שבץ הוא שייך?',
   multi: false,
@@ -2226,7 +2226,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_seizure_phases',
+  id: 'GC_0095',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם שלבי פרכוס גדול (Grand Mal)?',
   multi: false,
@@ -2243,7 +2243,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_febrile_seizure',
+  id: 'GC_0096',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מה מאפיין פרכוסי חום בילדים?',
   multi: false,
@@ -2260,7 +2260,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_status_epilepticus',
+  id: 'GC_0097',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהו סטטוס אפילפטיקוס, ומדוע הוא מצב חירום?',
   multi: false,
@@ -2277,7 +2277,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_syncope_prodrome',
+  id: 'GC_0098',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם הסימנים המקדימים האופייניים לעילפון (Syncope), ומה חשוב לזכור לגביהם?',
   multi: false,
@@ -2294,7 +2294,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_syncope_atypical_red_flag',
+  id: 'GC_0099',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מטופל איבד הכרה למספר דקות, עם דופק ונשימה חריגים בהתעוררות. האם זהו עילפון קלאסי?',
   multi: false,
@@ -2311,7 +2311,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_diabetes_type1_vs_type2',
+  id: 'GC_0100',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מה ההבדל העיקרי בין סוכרת סוג 1 לסוכרת סוג 2?',
   multi: false,
@@ -2328,7 +2328,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_hypoglycemia_unconscious',
+  id: 'GC_0101',
   source: 'generated', qtype: ['scenario'], section: 'הטיפול בחולה',
   question: 'מטופל סוכרתי נמצא מחוסר הכרה בביתו, עור קר ולח, בדיקת סוכר מראה 42 מ"ג/ד"ל. מה תעשה?',
   multi: false,
@@ -2345,7 +2345,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_stroke_time_unknown',
+  id: 'GC_0102',
   source: 'generated', qtype: ['scenario'], section: 'הטיפול בחולה',
   question: 'מטופל נמצא ע"י בן משפחה עם חולשת צד וקושי דיבור, אך לא ידוע מתי בדיוק החלו התסמינים (יתכן שהתעורר כך משינה — "Wake-up Stroke"). מה עליך לעשות?',
   multi: false,
@@ -2366,7 +2366,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: הלם ואנפילקסיס
 // ---------------------------------------------------------
 {
-  id: 'concept_shock_three_factors',
+  id: 'GC_0103',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהם שלושת הגורמים הפיזיולוגיים העיקריים שיכולים לגרום להלם?',
   multi: false,
@@ -2383,7 +2383,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_tissue_ischemia_tolerance',
+  id: 'GC_0104',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'איזו קבוצת רקמות/איברים היא הרגישה ביותר לאיסכמיה (מפסיקה לתפקד תקין ראשונה בזמן הלם)?',
   multi: false,
@@ -2400,7 +2400,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_neurogenic_shock_reverse',
+  id: 'GC_0105',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מדוע הלם עצבי (נוירוגני) מציג תמונה קלינית הפוכה משאר סוגי ההלם?',
   multi: false,
@@ -2417,7 +2417,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_epinephrine_mechanism_anaphylaxis',
+  id: 'GC_0106',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מדוע אדרנלין הוא הטיפול המרכזי באנפילקסיס, ולא רק "עוד תרופה" בין רבות?',
   multi: false,
@@ -2434,7 +2434,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_epinephrine_injection_site',
+  id: 'GC_0107',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'היכן מזריקים אדרנלין באנפילקסיס, ומדוע לא באתרים אחרים?',
   multi: false,
@@ -2451,7 +2451,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_epinephrine_repeat_dose',
+  id: 'GC_0108',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מטופל הזריק לעצמו אפיפן, ולאחר 8 דקות עדיין מציג סימני אנפילקסיס ללא שיפור. מה יש לשקול?',
   multi: false,
@@ -2468,7 +2468,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_anaphylaxis_criteria',
+  id: 'GC_0109',
   source: 'generated', qtype: ['concept'], section: 'הטיפול בחולה',
   question: 'מהו הקריטריון הקליני להגדרת אנפילקסיס?',
   multi: false,
@@ -2485,7 +2485,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_anaphylaxis_food',
+  id: 'GC_0110',
   source: 'generated', qtype: ['scenario'], section: 'הטיפול בחולה',
   question: 'ילדה בת 8 אכלה מאכל עם בוטנים, ותוך דקות פיתחה פריחה נרחבת, בצקת בשפתיים, וקוצר נשימה עם צפצופים. מה תעשה קודם כל?',
   multi: false,
@@ -2506,7 +2506,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: כוויות ופגיעות סביבה
 // ---------------------------------------------------------
 {
-  id: 'concept_burn_degree_classification',
+  id: 'GC_0111',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות', multi: true,
   question: 'אילו מהתיאורים הבאים תואמים נכון לדרגת הכוויה שלצידם?',
   options: {
@@ -2522,7 +2522,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_critical_burns',
+  id: 'GC_0112',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות', multi: true,
   question: 'אילו מהבאים מוגדרים "כוויות קריטיות" המחייבות פינוי לבי"ח ייעודי לכוויות?',
   options: {
@@ -2538,7 +2538,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_burn_inhalation_signs',
+  id: 'GC_0113',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות', multi: true,
   question: 'אילו מהסימנים הבאים מחשידים לכוויית דרכי נשימה?',
   options: {
@@ -2554,7 +2554,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_burn_treatment_cooling',
+  id: 'GC_0114',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'כיצד יש לקרר כוויית חום בשטח, ומה יש להימנע ממנו?',
   multi: false,
@@ -2571,7 +2571,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_chemical_burn_treatment',
+  id: 'GC_0115',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מטופל נחשף לכוויה כימית מחומר באבקה. מה סדר הטיפול הנכון?',
   multi: false,
@@ -2588,7 +2588,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_heat_exhaustion_vs_stroke',
+  id: 'GC_0116',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מה ההבדל המרכזי בין תשישות חום (Heat Exhaustion) למכת חום (Heat Stroke)?',
   multi: false,
@@ -2605,7 +2605,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_frostbite_treatment',
+  id: 'GC_0117',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מה הטיפול הנכון בכוויית קור (Frostbite), ומה אסור לעשות?',
   multi: false,
@@ -2622,7 +2622,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hypothermia_progression',
+  id: 'GC_0118',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'כיצד משתנה קצב הלב ככל שהיפותרמיה מחמירה?',
   multi: false,
@@ -2639,7 +2639,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_co_source_and_symptoms',
+  id: 'GC_0119',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהו המקור השכיח ביותר להרעלת פחמן חד-חמצני (CO) בחורף, ומהם התסמינים המוקדמים?',
   multi: false,
@@ -2656,7 +2656,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_op_poisoning_symptoms',
+  id: 'GC_0120',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהם הסימנים האופייניים להרעלת זרחן אורגני (OP, מרעילי עצב חקלאיים)?',
   multi: false,
@@ -2673,7 +2673,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_stimulant_poisoning_symptoms',
+  id: 'GC_0121',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מטופל מציג טכיקרדיה, יתר לחץ דם, אישונים מורחבים ואי-שקט/פרנויה. באיזו הרעלה תחשוד?',
   multi: false,
@@ -2690,7 +2690,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_drowning_resuscitation_order',
+  id: 'GC_0122',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהו סדר ההחייאה הנכון בטביעה, ובמה הוא שונה מהחייאה סטנדרטית?',
   multi: false,
@@ -2707,7 +2707,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_decompression_sickness',
+  id: 'GC_0123',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מה גורם למחלת דקומפרסיה (Bends) בצוללים, ומהו הטיפול הדפיניטיבי?',
   multi: false,
@@ -2724,7 +2724,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_electrical_injury_first_action',
+  id: 'GC_0124',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהי הפעולה הראשונה תמיד בטיפול בפגיעת חשמל?',
   multi: false,
@@ -2741,7 +2741,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_hanging_rescue_minimum',
+  id: 'GC_0125',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'כמה מטפלים נדרשים כמינימום להורדת נפגע מתלייה, ומדוע?',
   multi: false,
@@ -2758,7 +2758,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_snake_bite_treatment',
+  id: 'GC_0126',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות', multi: true,
   question: 'אילו מהפעולות הבאות אסורות בטיפול בהכשת נחש?',
   options: {
@@ -2774,7 +2774,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_animal_bite_reporting',
+  id: 'GC_0127',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מטופל נשך ע"י כלב רחוב. מעבר לטיפול המקומי, מה חובה נוספת מוטלת על הצוות?',
   multi: false,
@@ -2791,7 +2791,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_co_generator_family',
+  id: 'GC_0128',
   source: 'generated', qtype: ['scenario'], section: 'פגיעות סביבתיות',
   question: 'הוזעקת לבית בחורף שבו מחולל חשמל פעל בחדר סגור. שני ילדים נמצאים ישנוניים, עם כאבי ראש. הסטורציה נמדדת 97%. מה תעשה?',
   multi: false,
@@ -2808,7 +2808,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_heat_stroke_marathon',
+  id: 'GC_0129',
   source: 'generated', qtype: ['scenario'], section: 'פגיעות סביבתיות',
   question: 'רץ מרתון קורס ביום חם. עורו סמוק וחם למגע (יבש), הוא מבולבל, דופק מהיר וחלש. מה תחשד ומה תעשה?',
   multi: false,
@@ -2829,7 +2829,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: לידה וגניקולוגיה
 // ---------------------------------------------------------
 {
-  id: 'concept_supine_hypotensive_syndrome',
+  id: 'GC_0130',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'מדוע אין להשכיב יולדת בהריון מתקדם על גבה באופן שטוח וממושך?',
   multi: false,
@@ -2846,7 +2846,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_cervix_dilation_effacement',
+  id: 'GC_0131',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'מה ההבדל בין "מחיקת" צוואר הרחם ל"פתיחתו"?',
   multi: false,
@@ -2863,7 +2863,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_true_labor_signs',
+  id: 'GC_0132',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה', multi: true,
   question: 'אילו מהסימנים הבאים מעידים על לידה קרֵבה?',
   options: {
@@ -2879,7 +2879,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_no_manual_vaginal_exam',
+  id: 'GC_0133',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'האם מותר לחובש לבצע בדיקה וגינלית ידנית בשטח כדי להעריך פתיחת צוואר הרחם?',
   multi: false,
@@ -2896,7 +2896,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_meconium_stained_fluid',
+  id: 'GC_0134',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'מה עושים כאשר מזהים מים מקוניאליים (חום/ירוקים) בזמן קבלת לידה?',
   multi: false,
@@ -2913,7 +2913,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_cord_clamping',
+  id: 'GC_0135',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'כיצד מבצעים הידוק וחיתוך חבל הטבור לאחר הלידה?',
   multi: false,
@@ -2930,7 +2930,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_breech_presentation',
+  id: 'GC_0136',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'ביולדת עם מצג עכוז (התינוק יוצא ברגליים/עכוז תחילה), מה עקרון הטיפול?',
   multi: false,
@@ -2947,7 +2947,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_placenta_delivery',
+  id: 'GC_0137',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'האם יש להמתין בשטח ללידת השליה לפני פינוי, ומהי הסכנה העיקרית לאחר הלידה?',
   multi: false,
@@ -2964,7 +2964,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_ectopic_pregnancy',
+  id: 'GC_0138',
   source: 'generated', qtype: ['concept'], section: 'לידה וגניקולוגיה',
   question: 'כיצד יש לטפל בחשד להריון חוץ-רחמי עם דימום?',
   multi: false,
@@ -2981,7 +2981,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'scenario_placenta_previa_bleeding',
+  id: 'GC_0139',
   source: 'generated', qtype: ['scenario'], section: 'לידה וגניקולוגיה',
   question: 'יולדת בשבוע 34 להריון עם היסטוריה ידועה של שליית פתח (Placenta Previa) מדווחת על דימום וגינלי ללא כאב. מה תחשד ומה תעשה?',
   multi: false,
@@ -3002,7 +3002,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: גישה ורידית ומתן נוזלים
 // ---------------------------------------------------------
 {
-  id: 'concept_crystalloid_vs_colloid',
+  id: 'GC_0140',
   source: 'generated', qtype: ['concept'], section: 'ציוד רפואי',
   question: 'מה ההבדל בין תמיסת קריסטלואיד לתמיסת קולואיד, ואיזו נפוצה יותר בשלב טרום-בית-חולים?',
   multi: false,
@@ -3019,7 +3019,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_iso_hypo_hypertonic',
+  id: 'GC_0141',
   source: 'generated', qtype: ['concept'], section: 'ציוד רפואי', multi: true,
   question: 'אילו מהצירופים הבאים בין סוג תמיסה לכיוון תנועת הנוזל נכונים?',
   options: {
@@ -3035,7 +3035,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_iv_only_during_transport',
+  id: 'GC_0142',
   source: 'generated', qtype: ['concept'], section: 'ציוד רפואי',
   question: 'מתי בזמן הטיפול מותר לתת נוזלים IV למטופל טראומה לא-יציב, ומה העיקרון המרכזי?',
   multi: false,
@@ -3052,7 +3052,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_venflon_complications',
+  id: 'GC_0143',
   source: 'generated', qtype: ['concept'], section: 'ציוד רפואי', multi: true,
   question: 'אילו מהבאים הם סיבוכים אפשריים של פתיחת קו ורידי (ונפלון)?',
   options: {
@@ -3072,7 +3072,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
 // SECTION: מוכנות לרעידות אדמה
 // ---------------------------------------------------------
 {
-  id: 'concept_earthquake_protected_space',
+  id: 'GC_0144',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מה חשוב לזכור בעת כניסה למרחב מוגן (ממ"ד/חדר מדרגות) בזמן רעידת אדמה?',
   multi: false,
@@ -3089,7 +3089,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_earthquake_indoor_response',
+  id: 'GC_0145',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'אדם נמצא בתוך מבנה בזמן רעידת אדמה, ואין לו גישה למרחב מוגן או חדר מדרגות. מה עליו לעשות?',
   multi: false,
@@ -3106,7 +3106,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_earthquake_vehicle',
+  id: 'GC_0146',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'נהג ברכב חש רעידת אדמה. מה עליו לעשות, ומה עליו להימנע ממנו?',
   multi: false,
@@ -3123,7 +3123,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_tsunami_warning_sign',
+  id: 'GC_0147',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהו הסימן המובהק ביותר לצונאמי מתקרב, ומה יש לעשות בעת חשד?',
   multi: false,
@@ -3140,7 +3140,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_after_earthquake_gas_electricity',
+  id: 'GC_0148',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'לאחר רעידת אדמה, אדם נמצא בתוך מבנה שניזוק קלות. מה עליו לעשות ומה להימנע ממנו?',
   multi: false,
@@ -3157,7 +3157,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_aftershocks_danger',
+  id: 'GC_0149',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהן "רעידות משנה" (Aftershocks), ומדוע הן מסוכנות?',
   multi: false,
@@ -3174,7 +3174,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_trapped_person_dos_donts',
+  id: 'GC_0150',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות', multi: true,
   question: 'מה מומלץ לעשות ולא לעשות עבור אדם שנלכד בהריסות לאחר רעידת אדמה?',
   options: {
@@ -3190,7 +3190,7 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   },
 },
 {
-  id: 'concept_disconnection_scenario',
+  id: 'GC_0151',
   source: 'generated', qtype: ['concept'], section: 'פגיעות סביבתיות',
   question: 'מהו "מתאר ניתוק" בהקשר של רעידת אדמה גדולה, ומה המשמעות עבור מתנדב/חובש?',
   multi: false,
@@ -4308,5 +4308,309 @@ window.GENERATED_CONCEPT_QUESTIONS = [
   options:{'א':'לא — אין לחבר דפיברילטור לחולה עם דופק','ב':'כן, זה בטוח לחלוטין תמיד','ג':'רק אם המטופל מבקש זאת','ד':'רק בילדים, לא במבוגרים'},
   correct:'א',
   explanation:{correct:'אין לחבר דפיברילטור למטופל עם דופק — מכשיר הדפיברילציה מיועד לזיהוי וטיפול בהפרעות קצב בנות-שוק בזמן דום לב בלבד, ומתן שוק למטופל עם דופק (ולב פועם באופן מאורגן) עלול לגרום נזק חמור ואף לגרום להפרעת קצב מסכנת חיים.',
-    wrong:'זו אינה פעולה בטוחה תמיד — יש לה סיכון ממשי כשמופעלת שלא לצורך; בקשת המטופל אינה משנה את הסיכון הפיזיולוגי; והאיסור חל בכל הגילאים, לא רק בילדים.'} }
+    wrong:'זו אינה פעולה בטוחה תמיד — יש לה סיכון ממשי כשמופעלת שלא לצורך; בקשת המטופל אינה משנה את הסיכון הפיזיולוגי; והאיסור חל בכל הגילאים, לא רק בילדים.'} },
+
+  // ---------------- מודול חדש: מענה מד"א בשעת חירום ----------------
+  // 10 שאלות מהמצגת: הטיפול בנפגעי זרחנים אורגניים
+  { id:'concept_zarhan_mechanism', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו המנגנון הפתופיזיולוגי של הרעלה מזרחן אורגני?',
+    options:{'א':'הזרחן האורגני תופס את האנזים אצטיל-כולין-אסטראז (AchE) ומונע פירוק של אצטילכולין, מה שגורם להפעלה מתמשכת של איברי המטרה',
+      'ב':'הזרחן האורגני חוסם את שחרור האצטילכולין מהנוירון הפרה-סינפטי',
+      'ג':'הזרחן האורגני הורס את קולטני האצטילכולין באיבר המטרה',
+      'ד':'הזרחן האורגני מעכב את ייצור האצטילכולין במוח'},
+    correct:'א',
+    explanation:{correct:'זרחן אורגני תופס את ה-AchE ומונע ממנו לפרק את הקשר בין אצטילכולין לקולטן, כך שאיברי המטרה (בלוטות, שרירים חלקים ושלד) ממשיכים להיות מופעלים ברציפות — זו הסיבה לתמונה הקלינית הקלאסית ("מתכווץ ונוזל").',
+      wrong:'הזרחן האורגני אינו פוגע בשחרור האצטילכולין, בקולטנים עצמם או בייצורו במוח — הבעיה היא ספציפית בפירוק הקשר לאחר ההפרשה, דרך עיכוב האנזים המפרק.'} },
+
+  { id:'concept_zarhan_symptoms', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'אילו מהתסמינים הבאים מתאימים לתמונה הקלינית הקלאסית של הרעלת זרחן אורגני?',
+    options:{'א':'כיווץ אישונים, הפרשה מוגברת מריריות (דמעת/נזלת/רוק/הזעה), קוצר נשימה ופרכוסים',
+      'ב':'הרחבת אישונים, יובש בפה ובעור, עצירות וטכיקרדיה',
+      'ג':'חום גבוה, פריחה עורית וכאבי מפרקים',
+      'ד':'ירידה בלחץ הדם בלבד ללא סימנים נוספים'},
+    correct:'א',
+    explanation:{correct:'התמונה הקלאסית ("מתכווץ ונוזל") כוללת כיווץ אישונים, הפרשות מוגברות מכל הריריות, קוצר נשימה עד שיתוק שרירי נשימה, ופרכוסים — תוצאה של גירוי כולינרגי מתמשך.',
+      wrong:'הרחבת אישונים ויובש הם תסמינים אנטיכולינרגיים — ההפך המדויק מהתמונה הכולינרגית של הרעלת ז"א; חום/פריחה/מפרקים אינם חלק מהתמונה הטיפוסית; וגם ירידת ל"ד בלבד אינה משקפת את מכלול הסימנים האופייני.'} },
+
+  { id:'concept_zarhan_death_causes', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהי הסיבה השכיחה ביותר למוות בהרעלת זרחן אורגני חמורה?',
+    options:{'א':'הפסקת נשימה, כתוצאה משילוב חולשת שרירי נשימה, ריבוי הפרשות בדרכי הנשימה וברונכוספאזם',
+      'ב':'דימום פנימי מסיבי',
+      'ג':'כשל כלייתי חריף',
+      'ד':'חנק כתוצאה מבצקת גרון בלבד'},
+    correct:'א',
+    explanation:{correct:'הסיבה העיקרית למוות היא הפסקת נשימה, המתפתחת משילוב של חולשת/שיתוק שרירי הנשימה, הפרשות מרובות החוסמות את דרכי הנשימה, וברונכוספאזם. גם פגיעה מוחית (פרכוסים והיפוקסיה) וטראומה משנית לפרכוסים תורמות לתמותה.',
+      wrong:'דימום פנימי וכשל כלייתי אינם קשורים למנגנון ההרעלה מז"א; בצקת גרון בלבד אינה המנגנון המרכזי — מדובר בשילוב של כמה גורמים נשימתיים בו-זמנית.'} },
+
+  { id:'concept_zarhan_aging_window', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו פרק הזמן העומד לרשות הצוות הרפואי למתן טיפול באוקסימים לפני "הזדקנות הקשר" (Aging) בין הזרחן האורגני לאנזים, בהרעלה מסוכן הלחימה GD (Soman)?',
+    options:{'א':'כ-3 דקות בלבד — חלון זמן קצר בהרבה מ-GA/GB',
+      'ב':'כ-6 שעות, זהה לחלוטין ל-GA ו-GB',
+      'ג':'כ-24 שעות',
+      'ד':'אין הגבלת זמן — אוקסימים יעילים בכל שלב'},
+    correct:'א',
+    explanation:{correct:'בסוכן GD (Soman) הקשר בין הזרחן האורגני לאנזים "מזדקן" (מתקבע) מהר במיוחד — תוך כ-3 דקות בלבד, בהשוואה לכ-6 שעות בסוכנים GA (Tabun) ו-GB (Sarin). לאחר ההזדקנות, האוקסימים אינם יעילים עוד בפירוק הקשר.',
+      wrong:'6 שעות הוא חלון הזמן ב-GA/GB, לא ב-GD; 24 שעות ואי-הגבלת זמן אינם נכונים — ההזדקנות בסומן מהירה ביותר, מה שמקשה טיפולית משמעותית.'} },
+
+  { id:'concept_zarhan_severity_class', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'לפי הפרוטוקול, כיצד מסווגים נפגע "בינוני" לעומת נפגע "קשה" בהרעלת זרחן אורגני?',
+    options:{'א':'נפגע בינוני שוכב אך נושם באופן אפקטיבי; נפגע קשה שוכב וזקוק להנשמה',
+      'ב':'נפגע בינוני מתהלך; נפגע קשה שוכב, ללא קשר למצב הנשימה',
+      'ג':'הסיווג נקבע רק לפי מספר מנות האטרופין שכבר ניתנו',
+      'ד':'אין הבדל מהותי — שני הסיווגים מטופלים באותו אופן בדיוק'},
+    correct:'א',
+    explanation:{correct:'נפגע קל מוגדר כמתהלך. נפגע בינוני שוכב אך נושם אפקטיבית. נפגע קשה שוכב וזקוק להנשמה (ירידה במצב הכרה, קוצר נשימה קשה, הפרעות קצב, ירידת ל"ד, שיתוק שרירים, איבוד שליטה על סוגרים, פרכוסים).',
+      wrong:'"מתהלך" הוא הגדרת הנפגע הקל ולא הבינוני; הסיווג אינו נקבע לפי מנות אטרופין שניתנו אלא לפי המצב הקליני; וההבחנה בין הדרגות משפיעה ישירות על עוצמת/תדירות הטיפול.'} },
+
+  { id:'concept_zarhan_atropine_role', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהי מטרת מתן האטרופין בטיפול בהרעלת זרחן אורגני, ובאיזו מערכת הוא פועל בעיקר?',
+    options:{'א':'אטרופין הוא תרופה אנטי-כולינרגית החוסמת את הפעלת איברי המטרה במערכת הפריפרית',
+      'ב':'אטרופין מפרק ישירות את הקשר בין הזרחן האורגני לאנזים AchE',
+      'ג':'אטרופין הוא נוגד פרכוסים הפועל אך ורק על המערכת המרכזית',
+      'ד':'אטרופין מחליף את פעולת האנזים AchE במקומו'},
+    correct:'א',
+    explanation:{correct:'אטרופין הוא תרופה אנטי-כולינרגית שחוסמת את קולטני האצטילכולין באיברי המטרה, בעיקר במערכת הפריפרית, ובכך מונעת את התסמינים הכולינרגיים (הפרשות, ברדיקרדיה וכו\') — אך אינה מתקנת את המנגנון הביוכימי עצמו. תיקון הקשר האנזימטי נעשה ע"י אוקסימים (כמו Toxogonin).',
+      wrong:'פירוק הקשר בין הזרחן לאנזים הוא תפקידם של האוקסימים, לא של האטרופין; אטרופין אינו נוגד פרכוסים (זהו תפקיד המידזולם); ואינו "מחליף" את פעולת האנזים אלא חוסם את התוצאה הקלינית שלו.'} },
+
+  { id:'scenario_zarhan_supine_syringes', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'הגעת לנפגע ז"א הנמצא שוכב בזירה. כמה מזרקים אוטומטיים (TA) יש לתת לו, ובאיזו שיטה?',
+    options:{'א':'שני מזרקים, אחד בכל ירך, ותמיד דרך הבגדים',
+      'ב':'מזרק אחד בלבד, ללא קשר לחומרת המצב',
+      'ג':'שלושה מזרקים, אחד בכל גפה',
+      'ד':'יש להסיר את הבגד לפני ההזרקה, ולתת מזרק אחד בזרוע'},
+    correct:'א',
+    explanation:{correct:'נפגע שוכב מקבל 2 מזרקים אוטומטיים (אחד לכל ירך), לעומת נפגע מתהלך המקבל מזרק אחד בלבד. ההזרקה מתבצעת דרך הבגדים בירך, ללא צורך בהפשטה מקדימה — חשוב לזכור שמנת TA היא חד-פעמית (לא לחזור עליה).',
+      wrong:'מזרק אחד מתאים לנפגע מתהלך, לא שוכב; שלושה מזרקים אינם חלק מהפרוטוקול; ואין צורך להסיר בגד — ההזרקה נעשית במכוון דרך הבגד בירך.'} },
+
+  { id:'scenario_zarhan_persistent_symptoms', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'נפגע ז"א קיבל מזרק TA וחלפו 15 דקות, אך הוא עדיין סימפטומטי. מה הצעד המתאים?',
+    options:{'א':'מתן מזרק Atropine נוסף לפי גיל, וחזרה כל 10-15 דקות כל עוד הוא סימפטומטי',
+      'ב':'מתן מזרק TA נוסף מיידית',
+      'ג':'אין לתת דבר נוסף — יש להמתין לפינוי לבי"ח בלבד',
+      'ד':'מתן שתי מנות TA נוספות בבת אחת'},
+    correct:'א',
+    explanation:{correct:'מנת ה-TA היא חד-פעמית בלבד לנפגע. אם הנפגע נותר סימפטומטי כעבור 15 דקות, ממשיכים במתן Atropine נוסף (מזרק אחד, לפי מינון גיל) כל 10-15 דקות, כל עוד קיימים סימפטומים.',
+      wrong:'אין חוזרים על מנת TA; אי-מתן תרופה נוספת מסכן את הנפגע בהתמשכות התסמינים; ומתן שתי מנות בבת אחת חורג מהפרוטוקול המבוקר.'} },
+
+  { id:'scenario_zarhan_severe_protocol', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'הגעת לנפגע ז"א המסווג כ"קשה" (שוכב, זקוק להנשמה). מהו הצעד הנדרש בפרוטוקול?',
+    options:{'א':'מתן מנות חוזרות של אטרופין IV, שקילת מעבר לפרוטוקול הפסקת נשימה מאיימת, ושקילת מתן מידאזולם',
+      'ב':'מנה בודדת של אטרופין ובלי מעקב נוסף',
+      'ג':'הפניה מיידית לניתוח, ללא טיפול תרופתי מקדים',
+      'ד':'מתן חמצן בלבד ללא כל תרופה'},
+    correct:'א',
+    explanation:{correct:'בנפגע קשה יש לתת מנות חוזרות של אטרופין IV (ללא מינון מקסימלי), לשקול מעבר לפרוטוקול הפסקת נשימה מאיימת, ולשקול מתן מידאזולם כנוגד פרכוסים — תוך המשך ניטור והכנה לפינוי דחוף.',
+      wrong:'מנה בודדת אינה מספקת בנפגע קשה; ניתוח אינו חלק מהטיפול הראשוני בהרעלת ז"א; וחמצן בלבד ללא תרופות כולינרגיות-נגדיות אינו מטפל בגורם הבעיה.'} },
+
+  { id:'concept_zarhan_oxime_function', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו תפקידן הייחודי של תרופות ה"אוקסימים" (כגון Toxogonin) בטיפול בהרעלת זרחן אורגני, בשונה מאטרופין?',
+    options:{'א':'הן מפרקות את הקשר הכימי בין הזרחן האורגני לאנזים AchE, ובכך משחזרות את פעילות האנזים',
+      'ב':'הן חוסמות את קולטני האצטילכולין באיברי המטרה, בדיוק כמו אטרופין',
+      'ג':'הן משמשות להרגעה ומניעת פרכוסים בלבד',
+      'ד':'הן מנטרלות את הזרחן האורגני בדם לפני שהוא מגיע לאנזים'},
+    correct:'א',
+    explanation:{correct:'בניגוד לאטרופין, שחוסם את התוצאה הקלינית (קולטני האצטילכולין), האוקסימים פועלים ישירות על הבעיה הביוכימית — הם מפרקים את הקשר בין הזרחן האורגני לאנזים AchE ומשחזרים את יכולתו לפרק אצטילכולין. חשוב: יעילותם תלויה בזמן, לפני ש"הקשר מזדקן" (ראו GD מול GA/GB).',
+      wrong:'חסימת קולטנים היא פעולת האטרופין, לא האוקסימים; נוגד הפרכוסים הוא מידזולם/TMB4 ולא האוקסימים; והאוקסימים אינם פועלים על הזרחן החופשי בדם אלא על הקשר שכבר נוצר עם האנזים.'} },
+
+  // 10 שאלות מהמצגת: עקרונות במענה למגה אר"ן קונבנציונאלי
+  { id:'concept_megaran_definition', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו המאפיין המרכזי המגדיר אירוע "טרור-על", בשונה מאירוע טרור רגיל?',
+    options:{'א':'קפיצת מדרגה ממשית ביחס לדפוסי הטרור השוטפים, עם השפעה ישירה על הביטחון הלאומי (למשל הרג המוני, שימוש באמל"ח בלתי קונבנציונלי, פגיעה בתשתיות לאומיות)',
+      'ב':'כל אירוע שבו יש יותר מפצוע אחד',
+      'ג':'אירוע המתרחש אך ורק בתוך מתקן ביטחוני',
+      'ד':'אירוע שבו נעשה שימוש בנשק חם בלבד, ללא קשר להיקפו'},
+    correct:'א',
+    explanation:{correct:'"טרור-על" מוגדר כאירועי טרור חמורים ביותר המהווים קפיצת מדרגה ממשית ביחס לדפוסי הטרור הנוכחים, ובעלי השפעה ישירה על הביטחון הלאומי — למשל הרג המוני של עשרות/מאות, שימוש אפקטיבי באמל"ח בלתי קונבנציונלי, פגיעה קשה בתשתיות לאומיות, חציית "קווים אדומים", או פגיעה קטלנית באישיות בכירה מאד.',
+      wrong:'מספר פצועים גדול מ-1 לבדו אינו מספיק כדי להיחשב "טרור-על"; ההגדרה אינה תלויה במיקום פיזי (מתקן ביטחוני); ואינה תלויה בסוג הנשק (חם דווקא) אלא בהיקף ובעוצמת ההשפעה הלאומית.'} },
+
+  { id:'concept_megaran_vs_arn_numbers', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו ההבדל המרכזי במספר הנפגעים בין אירוע אר"ן "רגיל" לבין אירוע מגה אר"ן, לפי הנתונים ההיסטוריים שנסקרו?',
+    options:{'א':'אר"ן רגיל — כ-28 עד 100 נפגעים (ממוצע כ-63); מגה אר"ן — מעל 500 נפגעים',
+      'ב':'שני סוגי האירועים כוללים בממוצע אותו מספר נפגעים',
+      'ג':'אר"ן רגיל תמיד חמור יותר במספר הנפגעים ממגה אר"ן',
+      'ד':'מגה אר"ן מוגדר לפי מספר המחבלים בלבד, ללא קשר למספר הנפגעים'},
+    correct:'א',
+    explanation:{correct:'אר"ן "רגיל" כולל בד"כ 28-100 נפגעים (ממוצע כ-63 לאירוע), עם פינוי הפצוע הדחוף האחרון תוך כ-28 דקות. מגה אר"ן מאופיין במעל 500 נפגעים, כ-130 הרוגים, וזמן פינוי דחופים ארוך משמעותית (כ-1.5-2 שעות).',
+      wrong:'ההבדל במספר הנפגעים הוא משמעותי ולא זהה; הנתונים מראים בעליל שמגה אר"ן חמור יותר במספר הנפגעים; וההגדרה תלויה בעיקר בהיקף הנפגעים והזירות, לא רק במספר המחבלים.'} },
+
+  { id:'concept_megaran_command_split', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מי אחראי על ניהול האירוע בזירה במגה אר"ן, ומי אחראי על ניהול התגבור והשליטה במשאבים ברמה הארצית?',
+    options:{'א':'ניהול האירוע — המוקד המרחבי הטריטוריאלי; ניהול תגבור ושליטה במשאבים — מוקד ארצי',
+      'ב':'שני התפקידים מנוהלים אך ורק ע"י המוקד הארצי',
+      'ג':'שני התפקידים מנוהלים אך ורק ע"י המוקד המרחבי',
+      'ד':'הניהול נעשה בלעדית ע"י גורמי משטרה, ללא מעורבות מוקדי מד"א'},
+    correct:'א',
+    explanation:{correct:'לפי עקרונות המענה, ניהול האירוע עצמו (בזירה) הוא באחריות המוקד המרחבי הטריטוריאלי, בעוד שניהול התגבור והשליטה במשאבים ברמה הארצית מבוצע ע"י המוקד הארצי, שגם מכריז רשמית על מעבר למגה אר"ן.',
+      wrong:'אין ריכוזיות מלאה בידי גורם אחד — יש חלוקת תפקידים ברורה בין הזירה לרמה הארצית; והמענה כולל מעורבות מד"א משמעותית, לא רק גורמי משטרה.'} },
+
+  { id:'concept_megaran_two_axes', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'עם ההכרזה על מעבר לתפיסת הפעלה של מגה אר"ן, לאילו שני צירים עיקריים מתפצל המענה?',
+    options:{'א':'ציר רפואי (טיפול רפואי וליווי נפגעים) וציר אג"מי (תגבור האירוע וארגון השטח)',
+      'ב':'ציר תקשורתי בלבד וציר לוגיסטי בלבד',
+      'ג':'ציר משפטי וציר כספי',
+      'ד':'אין הבדל בין הצירים — הכל מתנהל כגוף אחד ללא חלוקה'},
+    correct:'א',
+    explanation:{correct:'שינוי תפיסת ההפעלה במגה אר"ן מתפצל לשני צירים מרכזיים: ציר רפואי — טיפול רפואי וליווי הנפגעים, וציר אג"מי — תגבור האירוע וארגון השטח (זירות, כוחות, לוגיסטיקה).',
+      wrong:'תקשורת ולוגיסטיקה הם רק חלק מהציר האג"מי, לא צירים נפרדים; אין ציר משפטי/כספי בהגדרת המענה המבצעי; והחלוקה לשני צירים היא מהותית ולא "הכל כגוף אחד".'} },
+
+  { id:'concept_megaran_reinforcement', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'אילו כוחות משוגרים כתגמור, בנוסף למענה האוטומטי הרגיל, עם ההכרזה על מגה אר"ן?',
+    options:{'א':'8 אמבולנסים, 2 אט"ן ותאר"ן — בנוסף למתנדבים/כוננים וכוחות נוספים לפי החלטה',
+      'ב':'אך ורק אמבולנס בודד נוסף',
+      'ג':'אין שינוי כלל בכוחות המשוגרים בין אר"ן רגיל למגה אר"ן',
+      'ד':'רק כוחות רפואיים של צה"ל, ללא תגבור אזרחי'},
+    correct:'א',
+    explanation:{correct:'עם הכרזת מגה אר"ן משוגר תגמור של 8 אמבולנסים, 2 אט"ן ותאר"ן בנוסף למענה האוטומטי, וכן מתנדבים/כוננים עם ערכות כונן, כוחות נוספים לפי החלטה, ורכבי הצלה מאזורים מרוחקים המנותבים ישירות לבתי חולים או לזירה.',
+      wrong:'אמבולנס בודד אינו משקף את היקף התגמור הנדרש; יש הבדל מהותי בהיקף הכוחות בין אר"ן רגיל למגה אר"ן; והתגבור כולל כוחות אזרחיים רבים, לא רק כוחות צה"ל.'} },
+
+  { id:'concept_megaran_evac_destinations', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו העיקרון המנחה בקביעת יעדי הפינוי לבתי החולים במגה אר"ן?',
+    options:{'א':'פינוי נפגעים דחופים לבתי חולים קרובים, נפגעים קלים לבתי חולים מרוחקים, תוך פיזור נפגעים (ללא ביצוע ויסות)',
+      'ב':'כל הנפגעים, ללא הבדל חומרה, מפונים לאותו בית חולים אחד קרוב',
+      'ג':'אין כל מדיניות סדורה — הבחירה נתונה לשיקול דעת חופשי של כל נהג אמבולנס',
+      'ד':'כל הנפגעים מפונים אך ורק במסוקים'},
+    correct:'א',
+    explanation:{correct:'העיקרון הוא פינוי דחופים לבתי חולים קרובים וקלים לבתי חולים מרוחקים, תוך פיזור הנפגעים בין מוסדות שונים (ולא ריכוזם במקום אחד) כדי לא להעמיס יתר על המידה על בי"ח בודד — מדיניות זו נקבעת ע"י אגף שע"ח/חמ"ל מר"פ, וייתכן גם ייעוד בי"ח ספציפי לזירה באירוע רב-זירתי.',
+      wrong:'ריכוז כלל הנפגעים בבי"ח אחד עלול לגרום לקריסת המערכת המקומית; יש מדיניות פינוי מסודרת ולא שיקול דעת אישי חופשי; ופינוי במסוקים הוא רק אחד מהאמצעים (בשיתוף צה"ל), לא הבלעדי.'} },
+
+  { id:'concept_megaran_bls_role', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו התפקיד העיקרי המוטל על צוותי BLS במגה אר"ן, לפי החלוקה בין ALS ל-BLS?',
+    options:{'א':'פינוי נפגעים לא דחופים, ליווי ברמת BLS לפינוי שני נפגעים דחופים באמבולנס, וריכוז/השגחה על נפגעים לא דחופים',
+      'ב':'ביצוע מיון שניוני (Triage) בלבד',
+      'ג':'ביצוע פעולות חודרניות ומתן תרופות IV',
+      'ד':'ניהול הקשר הארצי מול המוקד בלבד'},
+    correct:'א',
+    explanation:{correct:'צוותי BLS אחראים בעיקר על פינוי נפגעים לא דחופים (כולל באוטובוסים), ליווי ברמת BLS לפינוי שני נפגעים דחופים באמבולנס, וכן ריכוז נפגעים לא דחופים והשגחה עליהם עד לפינוי. מיון שניוני ופעולות חודרניות/תרופתיות הם באחריות צוותי ALS.',
+      wrong:'מיון שניוני הוא תפקיד עיקרי של פרמדיקים (ALS), לא BLS; פעולות חודרניות ותרופות IV חורגות מסמכות BLS; וניהול הקשר הארצי אינו תפקיד ספציפי של צוותי BLS בזירה.'} },
+
+  { id:'concept_megaran_als_role', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'כיצד מאורגנים פרמדיקים (ALS) בזירת מגה אר"ן, ומהו תפקידם המרכזי?',
+    options:{'א':'מתחלקים לגזרות עם פרמדיק אחראי לכל גזרה, מתמקדים ב-TRIAGE, סימון נפגעים ופעולות מצילות חיים, ופועלים אך ורק בשטח האירוע',
+      'ב':'כל הפרמדיקים פועלים יחד כקבוצה אחת ללא חלוקה לגזרות',
+      'ג':'תפקידם היחיד הוא נהיגת אמבולנסים בין הזירה לבתי החולים',
+      'ד':'פרמדיקים אינם נדרשים כלל באירוע מסוג מגה אר"ן'},
+    correct:'א',
+    explanation:{correct:'פרמדיקים מתחלקים לגזרות, כשבכל גזרה יש פרמדיק אחראי. הם מתרכזים ב-TRIAGE, סימון נפגעים ופעולות מצילות חיים, ובמיון שניוני (כחול/אדום/צהוב/שחור) להעברת הנפגעים הקשים (ובגל השני גם בינוניים) לפי סדר קדימות — ומתפקדים אך ורק בשטח האירוע.',
+      wrong:'עבודה ללא חלוקה לגזרות פוגעת ביעילות הטיפול בהיקף גדול; נהיגת אמבולנסים אינה התפקיד המרכזי (זהו תפקיד נהגים/BLS); ופרמדיקים הם דווקא חיוניים ביותר באירוע כזה.'} },
+
+  { id:'concept_megaran_comm_pager', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'כיצד מועברת הודעה על הכרזת מגה אר"ן לכלל מד"א?',
+    options:{'א':'הודעות בביפר, המועברות ע"י המוקד הארצי ל"כלל מד"א"',
+      'ב':'אך ורק בעל פה מפה לאוזן בין עובדים',
+      'ג':'הודעה אינה מועברת כלל, כל תחנה פועלת עצמאית',
+      'ד':'רק דרך הודעות SMS פרטיות של כל מפקד תחנה'},
+    correct:'א',
+    explanation:{correct:'הודעה על הכרזת מגה אר"ן מועברת בביפר ע"י המוקד הארצי, לכלל מד"א, כחלק מעקרונות הקשר של האירוע — זאת לצד גל קשר מנהלתי ארצי ("גל מפקדים – גל 2") ועמדת פינוי נפגעים במוקד המפעיל.',
+      wrong:'העברה מפה לאוזן בלבד אינה אמינה/מיידית מספיק לאירוע חירום לאומי; העדר תיאום מרכזי יפגע קשות בתגובה; והודעות SMS פרטיות אינן תחליף למנגנון ההודעה הרשמי הקבוע.'} },
+
+  { id:'concept_megaran_external_cooperation', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'אילו גורמים חיצוניים למד"א משתתפים בשיתוף פעולה בזמן מגה אר"ן, לפי המענה המבצעי שנסקר?',
+    options:{'א':'אגד (פינוי באוטובוסים), צה"ל (מסוקי פינוי, תאג"דים, צוותי פג"ה, אלונקאים), וגם אמבולנסים פרטיים בהחלטת שגרה',
+      'ב':'רק משטרת ישראל, ללא כל גורם נוסף',
+      'ג':'רק ארגונים בינלאומיים, ללא גורמים מקומיים',
+      'ד':'אין כל שיתוף פעולה חיצוני — מד"א פועל תמיד לבדו'},
+    correct:'א',
+    explanation:{correct:'שיתופי הפעולה כוללים את אגד (פינוי באוטובוסים עם ליווי, ציוד וקשר), צה"ל (הפעלת מסוקי פינוי לזירה, כוחות רפואה כמו תאג"דים וצוותי פג"ה, כוחות כוננות אג"מיים-אלונקאים), ובנוסף אפשרות לסיוע אמבולנסים פרטיים (כולל ויסות שניוני) בהחלטת מענה לשגרה.',
+      wrong:'משטרת ישראל היא גורם חשוב אך לא היחיד; ארגונים בינלאומיים אינם חלק מהמענה המבצעי המקומי שנסקר; ומד"א נשען משמעותית על שיתופי פעולה חיצוניים באירוע בהיקף כזה.'} },
+
+  // 10 שאלות מהמצגת: הפעלת מד"א באירוע טוקסיקולוגי
+  { id:'concept_toxevent_definition', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהם שלושת המאפיינים המרכזיים המגדירים "אירוע טוקסיקולוגי המוני" (אט"ה)?',
+    options:{'א':'אירוע רב-נפגעים עם סימנים דומים בכל הנפגעים (בעיקר גירוי עיניים ודרכי נשימה עליונות), הופעה בו-זמנית בכל קבוצות הגיל באותו תא שטח, וחוסר התאמה בין חומרת הפציעה למנגנון החבלה',
+      'ב':'מספיק שיהיה נפגע אחד עם קוצר נשימה כדי להגדיר אט"ה',
+      'ג':'אירוע המוגדר אך ורק לפי מספר הנפגעים, ללא קשר לסוג הסימנים',
+      'ד':'אירוע שבו כל הנפגעים סובלים דווקא מסימנים שונים זה מזה'},
+    correct:'א',
+    explanation:{correct:'אט"ה מוגדר כאירוע רב-נפגעים שבו לנפגעים סימנים דומים (בעיקר גירוי עיניים וגירוי דרכי נשימה עליונות), הנפגעים נמצאים באותו תא שטח גיאוגרפי והפגיעה מופיעה בכל קבוצות הגילאים בו-זמנית, וחומרת הפציעה/סימניה אינם תואמים למנגנון החבלה הנראה לעין.',
+      wrong:'נפגע בודד עם תסמין אחד אינו מספיק להגדרת אירוע המוני; ההגדרה אינה תלויה במספר בלבד אלא גם באופי הסימנים וחלוקתם; וסימנים דומים (לא שונים) בין הנפגעים הם דווקא מה שמעורר את החשד.'} },
+
+  { id:'scenario_toxevent_decision_process', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'הוזעקת לזירה עם מספר נפגעים בעלי תלונות דומות. לפי תהליך ההכרזה על אט"ה, מהו הצעד הראשון שיש לבחון?',
+    options:{'א':'האם מדובר באירוע רב-נפגעים? ורק לאחר מכן — האם קיימים סימני חשיפה לחומר מסוכן?',
+      'ב':'יש להתחיל ישר בטיפול תרופתי לפני כל הערכה',
+      'ג':'יש לבדוק תחילה את זהות הפוגע/מחבל, ורק אח"כ את מספר הנפגעים',
+      'ד':'אין תהליך מוגדר — ההחלטה נתונה לשיקול דעת חופשי בלבד'},
+    correct:'א',
+    explanation:{correct:'תהליך ההכרזה מתחיל בשאלה האם מדובר באירוע רב-נפגעים. אם כן, בוחנים האם קיימים סימני חשיפה לחומר מסוכן אצל הנפגעים (גו"ז קליני) — ובהתאם לתשובה ממשיכים לפי סד"פ אט"ה או לפי תו"ל אר"ן רגיל.',
+      wrong:'טיפול תרופתי לא יינתן לפני הערכה מסודרת; זהות התוקף אינה חלק מקריטריון ההכרזה הרפואי; והתהליך כן מוגדר בשלבים ברורים, לא שרירותי.'} },
+
+  { id:'concept_toxevent_safety_perimeter', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהם רדיוסי מעגל הביטחון (מב"ר) המומלצים באירוע אט"ה, בהתאם לסוג השטח?',
+    options:{'א':'200 מטר בשטח פתוח, ו-100 מטר מפתחי מבנה סגור',
+      'ב':'50 מטר בכל מקרה, ללא הבדל בין שטח פתוח לסגור',
+      'ג':'500 מטר בכל מקרה',
+      'ד':'אין צורך במעגל ביטחון באירוע טוקסיקולוגי'},
+    correct:'א',
+    explanation:{correct:'מב"ר מומלץ הוא 200 מטר בשטח פתוח, ו-100 מטר מפתחי מבנה סגור. ההיערכות המבצעית מתבצעת מחוץ למב"ר, במידת האפשר כשהפנים לאירוע והרוח בגב הצוות.',
+      wrong:'50 מטר קטן מדי כדי להגן על הצוותים מפני חומר אפשרי בשטח פתוח; 500 מטר אינו הערך המוגדר בפרוטוקול; ומעגל ביטחון הוא עיקרון בטיחות יסודי ולא ניתן לוותר עליו.'} },
+
+  { id:'scenario_toxevent_mobile_casualties', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'בזירת אט"ה מגיעים אליך מספר נפגעים מהלכים. כיצד יש לטפל בהם?',
+    options:{'א':'לכנס אותם למקום מוגדר בהתחשב בכיוון הרוח, להנחות הסרת שכבת בגדים עליונה וניגוב עור, ולוודא שאינם חוצים את מוקד האירוע',
+      'ב':'להשאירם לנוע חופשי בכל הזירה ללא ריכוז',
+      'ג':'להעניק להם מיד טיפול חודרני מלא בזירה עצמה',
+      'ד':'לפנותם קודם לכל נפגע אחר, ללא קשר לחומרת מצבם היחסית'},
+    correct:'א',
+    explanation:{correct:'נפגעים מהלכים מכונסים במקום מוגדר תוך התחשבות בכיוון הרוח, מקבלים הנחיה להסיר בגד עליון ולנגב עור בבד נקי/פדים, מוחזקים בהשגחה עד פינוי ברכב לא ייעודי (חלונות פתוחים) עם ליווי, ותוך הקפדה שלא יחצו את מוקד האירוע (למניעת התפשטות זיהום).',
+      wrong:'תנועה חופשית ללא ריכוז מסכנת בהתפשטות זיהום ובאובדן מעקב; טיפול חודרני מלא אינו מתאים לנפגע מהלך בזירה מזוהמת; וסדר הקדימות בפינוי אינו אוטומטי לפי "הראשון שהגיע" אלא לפי חומרה וסדר חילוץ מוגדר.'} },
+
+  { id:'concept_toxevent_extraction_order', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו סדר קדימות החילוץ הנכון של נפגעים בזירת אט"ה, מההיקף למוקד?',
+    options:{'א':'מהלכים (בכריזה) ← מהלכים הזקוקים להנחיה (שרשרת אנושית) ← שוכבים המראים סימני חיים ← שוכבים ללא סימני חיים',
+      'ב':'תמיד מתחילים מהמרכז (מוקד האירוע) כלפי חוץ, ללא קשר למצב הנפגע',
+      'ג':'הסדר נקבע אך ורק לפי גיל הנפגע',
+      'ד':'שוכבים ללא סימני חיים תמיד מחולצים ראשונים'},
+    correct:'א',
+    explanation:{correct:'סדר החילוץ מההיקף למוקד: תחילה מהלכים (בעזרת כריזה), אחר כך מהלכים הזקוקים להנחיה (שרשרת אנושית), לאחר מכן שוכבים המראים סימני חיים, ולבסוף שוכבים ללא סימני חיים/אובדן צלם אנוש — האחרונים מחולצים ע"י צוותים ב-LEVEL A ולא ע"י צוותי מד"א.',
+      wrong:'התחלה מהמרכז כלפי חוץ אינה הגישה המוגדרת — ההיגיון הוא מההיקף (הפחות מסוכן/פשוט יותר לחילוץ) פנימה; גיל אינו קריטריון הקדימות; ושוכבים ללא סימני חיים הם דווקא בעדיפות האחרונה.'} },
+
+  { id:'concept_toxevent_protective_level', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהי רמת המיגון האישי (Level) המשמשת את צוותי מד"א בערכת המיגון (מלט"ק) לאירוע טוקסיקולוגי, וכמה זמן פינוי אפשרי בכל סבב?',
+    options:{'א':'LEVEL C, עד 20 דקות לסבב פינוי (עד 2 סבבים)',
+      'ב':'LEVEL A, ללא הגבלת זמן',
+      'ג':'LEVEL D, ללא כל מיגון נשימתי',
+      'ד':'LEVEL B, עד 5 שעות רצוף'},
+    correct:'א',
+    explanation:{correct:'ערכת המיגון (מלט"ק) של מד"א מבוססת על LEVEL C, ומאפשרת 2 סבבי פינוי של עד 20 דקות כל אחד, לצורך הפשטת נפגעים והצלת נפגעים חיים. חילוץ נפגעים ללא סימני חיים ב-LEVEL A מבוצע ע"י גורמים אחרים, לא צוותי מד"א.',
+      wrong:'LEVEL A הוא רמת מיגון גבוהה יותר, המשמשת גורמים אחרים ולא צוותי מד"א; LEVEL D אינו מספק הגנה מפני חומרים מסוכנים; ואין אפשרות לשהייה של שעות רצופות בציוד מיגון בזירה מזוהמת.'} },
+
+  { id:'concept_toxevent_extraction_responsibility', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מיהו הגורם האחראי על חילוץ נפגעים בזירת אט"ה, ומהו תפקידו של מד"א בהקשר זה?',
+    options:{'א':'אחריות החילוץ עצמו על משטרת ישראל ע"ב יחידות סיור מיוחדות (יס"מ); מד"א מגדיר דחיפות חילוץ, מבצע פעולות מצילות חיים ומזרקים אוטומטיים, ומקצה אמצעי נשיאה לכוחות',
+      'ב':'מד"א אחראי בלעדית על כל תהליך החילוץ הפיזי בזירה מזוהמת',
+      'ג':'אין כל שיתוף פעולה בין מד"א למשטרה בתחום זה',
+      'ד':'כיבוי האש הוא הגורם היחיד המוסמך לחילוץ נפגעים'},
+    correct:'א',
+    explanation:{correct:'אחריות החילוץ הפיזי מהזירה המזוהמת נתונה למשטרת ישראל דרך יחידות הסיור המיוחדות (יס"מ). מד"א תורם בהגדרת דחיפות החילוץ, ביצוע פעולות מצילות חיים ומתן מזרקים אוטומטיים בהרעלת ז"א, יצירת תמונת מצב רפואית (תמ"צ), סיוע בחילוץ בהתאם ליכולות, והקצאת אמצעי נשיאה.',
+      wrong:'מד"א אינו הגורם המוביל בחילוץ הפיזי מהזירה המזוהמת — זו אחריות משטרתית; יש שיתוף פעולה הדוק בין הגורמים; וכיבוי האש הוא שותף חשוב (בייעוץ על החומר) אך לא הגורם הבלעדי לחילוץ נפגעים.'} },
+
+  { id:'concept_toxevent_unified_command_info', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'אילו סוגי מידע מקבל מד"א מנציגי כיבוי-האש (כב"ה) בחפ"ק האחוד באירוע אט"ה?',
+    options:{'א':'מידע על נפגעים ואופי האירוע, זיהוי החומרים המעורבים, הערכת סיכונים ודגשי מיגון, והנחיות לאוכלוסייה',
+      'ב':'אך ורק תחזית מזג האוויר',
+      'ג':'מידע כספי בלבד על עלויות האירוע',
+      'ד':'כב"ה אינו מספק כל מידע למד"א'},
+    correct:'א',
+    explanation:{correct:'בחפ"ק האחוד מקבל מד"א מכב"ה מידע קריטי: על הנפגעים ואופי האירוע (האם בשליטה, פוטנציאל החמרה), זיהוי ומידע על החומרים המעורבים, הערכת סיכונים (טווחי סיכון ודגשי מיגון), וכן הנחיות לאוכלוסייה הנגזרות מהמלצות כב"ה (ומועברות דרך הגורם הפוקד).',
+      wrong:'תחזית מזג אוויר אינה המידע המרכזי המועבר (אף שכיוון רוח רלוונטי); מידע כספי אינו רלוונטי לניהול הזירה בזמן אמת; ושיתוף המידע בין הגורמים הוא הכרחי ומתקיים בפועל.'} },
+
+  { id:'scenario_toxevent_contaminated_zone_care', source:'generated', qtype:['scenario'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'אתה נמצא עם נפגע בתוך שטח מזוהם באט"ה, טרם חולץ. מהי הפעולה הדחופה ביותר לפני כל פעולה טיפולית אחרת?',
+    options:{'א':'הרחקת הנפגע מהסביבה המזוהמת — בשטח המזוהם עצמו מבוצעות רק פעולות מצילות חיים דחופות',
+      'ב':'מתן טיפול תרופתי מלא בזירה המזוהמת עוד לפני החילוץ',
+      'ג':'המתנה לפינוי ישיר לבי"ח ללא כל טיפול בשטח',
+      'ד':'הפשטת הנפגע לפני חילוצו מהזירה המזוהמת'},
+    correct:'א',
+    explanation:{correct:'הפעולה הדחופה ביותר היא הרחקת הנפגע מהסביבה המזוהמת. בשטח מזוהם עצמו מתבצעות רק פעולות מצילות חיים דחופות (כמו מתן מזרקים אוטומטיים בהרעלת ז"א), וטיפול מלא/הפשטה מתבצעים לאחר החילוץ ע"י צוות ממוגן.',
+      wrong:'טיפול תרופתי מלא בזירה מזוהמת מסכן את הצוות ומעכב חילוץ; המתנה ללא כל טיפול עלולה לפגוע בנפגע כשיש פעולות מצילות חיים אפשריות; והפשטה מתבצעת לאחר החילוץ, לא לפני, ותמיד ע"י צוות ממוגן.'} },
+
+  { id:'concept_toxevent_end_of_event', source:'generated', qtype:['concept'], section:'מענה מד"א בשעת חירום', multi:false,
+    question:'מהו הסדר הנכון בסיום פעילות באירוע טוקסיקולוגי, ביחס לצוותי מד"א שפעלו בשטח המזוהם?',
+    options:{'א':'שטיפת אנשי הצוות מתבצעת טרם הסרת המיגון, ולאחר מכן מוסר המיגון לפי ההנחיות בפנקס הכיס, ונרשמים פרטי הצוותים שפעלו',
+      'ב':'הסרת המיגון מתבצעת קודם, ואז שוטפים את הצוות',
+      'ג':'אין צורך בתיעוד כלשהו של הצוותים שפעלו בשטח המזוהם',
+      'ד':'ניתן להסיר את המיגון בכל שלב וסדר לפי נוחות הצוות'},
+    correct:'א',
+    explanation:{correct:'בסיום האירוע יש לשטוף את אנשי הצוות עוד טרם הסרת המיגון (כדי למנוע זיהום עצמי בעת ההסרה), להסיר את המיגון לפי ההנחיות בפנקס הכיס, לרשום רישום מלא של פרטי הצוותים שפעלו באירוע (שימוש במיגון/טיפול בנפגעים/פעילות בשטח מזוהם), ולרכז את הציוד שנעשה בו שימוש לקבלת הנחיות המשך.',
+      wrong:'הסרת מיגון לפני שטיפה עלולה לגרום לזיהום עצמי של הצוות; רישום פרטי הצוותים הוא חובה (למעקב רפואי-תעסוקתי אפשרי); וקיים סדר מוגדר ומחייב, לא נוהג חופשי.'} }
 ];
