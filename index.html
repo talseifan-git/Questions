@@ -144,7 +144,12 @@
   .toggle.qtype.active .toggle-count{ color:#bfeae7; }
 
   .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  select{
+
+  /* ---------- Topic multi-select ---------- */
+  .topic-select{ position:relative; flex:1 1 220px; }
+  .topic-trigger{
+    width:100%;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
     background: var(--card-2);
     color: var(--text);
     border: 1.5px solid var(--line);
@@ -152,8 +157,73 @@
     padding: 9px 12px;
     font-size: 13.5px;
     font-family: var(--sans);
-    flex: 1 1 220px;
+    cursor: pointer;
+    text-align: right;
   }
+  .topic-trigger:hover{ border-color: var(--muted); }
+  .topic-trigger[aria-expanded="true"]{ border-color: var(--blue); }
+  .topic-trigger-label{
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+    flex:1 1 auto; min-width:0;
+  }
+  .topic-trigger-arrow{ color: var(--muted); flex-shrink:0; font-size:11px; transition: transform .15s; }
+  .topic-trigger[aria-expanded="true"] .topic-trigger-arrow{ transform: rotate(180deg); }
+
+  /* display:none by default, flex only while open — deliberately NOT relying on
+     the [hidden] attribute for this, since an explicit `display` declaration
+     here would override the browser's built-in `[hidden]{display:none}` rule
+     (author CSS beats UA CSS even at equal specificity), which is exactly what
+     kept this panel visibly open at all times. */
+  .topic-panel{
+    display:none;
+    position:absolute; z-index:20; top: calc(100% + 6px); right:0; left:0;
+    background: var(--card-2);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    padding: 10px;
+    max-height: 320px;
+    flex-direction:column;
+  }
+  .topic-panel.open{ display:flex; }
+  .topic-actions{ display:flex; gap:6px; margin-bottom:8px; flex-shrink:0; }
+  .topic-action-btn{
+    flex:1;
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    padding: 7px 6px;
+    font-size: 12.5px;
+    font-weight:700;
+    font-family: var(--sans);
+    cursor:pointer;
+  }
+  .topic-action-btn:hover{ border-color: var(--muted); }
+  .topic-action-close{ border-color: var(--blue); color: var(--blue); }
+  .topic-action-close:disabled{ opacity:.35; cursor:not-allowed; border-color: var(--line); color: var(--muted); }
+
+  .topic-list{ overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+  .topic-option{
+    display:flex; align-items:center; gap:10px;
+    padding: 8px 6px;
+    border-radius: 7px;
+    cursor:pointer;
+    user-select:none;
+    font-size: 13.5px;
+  }
+  .topic-option:hover{ background: var(--card); }
+  .topic-option input{ display:none; }
+  .topic-checkbox{
+    width:18px; height:18px; border-radius:5px;
+    border: 1.5px solid var(--muted-2);
+    background: var(--bg);
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:bold;
+  }
+  .topic-option.checked .topic-checkbox{ background: var(--blue); border-color: var(--blue); }
+  .topic-option.checked .topic-checkbox::after{ content:'✓'; color:#0f1318; }
   .btn{
     border: none; border-radius: 10px;
     padding: 12px 20px;
@@ -348,7 +418,20 @@
     </div>
     <p class="panel-title">נושא</p>
     <div class="row2">
-      <select id="topicFilter"></select>
+      <div class="topic-select" id="topicSelect">
+        <button type="button" class="topic-trigger" id="topicTrigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="topic-trigger-label" id="topicTriggerLabel">הכל</span>
+          <span class="topic-trigger-arrow">▾</span>
+        </button>
+        <div class="topic-panel" id="topicPanel">
+          <div class="topic-actions">
+            <button type="button" class="topic-action-btn" id="topicSelectAllBtn">הכל</button>
+            <button type="button" class="topic-action-btn" id="topicClearBtn">נקה</button>
+            <button type="button" class="topic-action-btn topic-action-close" id="topicCloseBtn">סגור</button>
+          </div>
+          <div class="topic-list" id="topicList" role="listbox" aria-multiselectable="true"></div>
+        </div>
+      </div>
       <button class="btn btn-primary" id="nextBtn">השאלה הבאה</button>
     </div>
   </div>
@@ -384,7 +467,12 @@
     useBank: true,
     useGen: true,
     qtypes: new Set(['concept', 'numeric', 'scenario']), // all on by default
-    topic: 'all',
+    // Selected topic sections. Populated in buildTopicList() below, right after
+    // load, with every section in bankSections — i.e. the default is "all topics",
+    // represented as the full set rather than a separate 'all' sentinel. Filtering
+    // code below just checks set-membership, so "all selected" behaves identically
+    // to the old topic==='all' branch without needing to special-case it.
+    selectedTopics: new Set(),
     current: null,       // current question object
     attempt: 0,          // 0 = not answered yet, 1 = one wrong try used
     wrongLetters: new Set(),     // single-select: ruled-out letters this attempt
@@ -441,7 +529,14 @@
   // ---------------- DOM refs ----------------
   const qArea = document.getElementById('qArea');
   const nextBtn = document.getElementById('nextBtn');
-  const topicFilter = document.getElementById('topicFilter');
+  const topicSelect = document.getElementById('topicSelect');
+  const topicTrigger = document.getElementById('topicTrigger');
+  const topicTriggerLabel = document.getElementById('topicTriggerLabel');
+  const topicPanel = document.getElementById('topicPanel');
+  const topicList = document.getElementById('topicList');
+  const topicSelectAllBtn = document.getElementById('topicSelectAllBtn');
+  const topicClearBtn = document.getElementById('topicClearBtn');
+  const topicCloseBtn = document.getElementById('topicCloseBtn');
   const toggleBank = document.getElementById('toggleBank');
   const toggleGen = document.getElementById('toggleGen');
   const toggleConcept = document.getElementById('toggleConcept');
@@ -462,7 +557,7 @@
   // reachable only if the bank itself grows a matching section).
   const bankSections = new Set(bankQs.map(q => q.section));
   function sectionAllowed(section){
-    return state.topic === 'all' ? bankSections.has(section) : section === state.topic;
+    return state.selectedTopics.has(section);
   }
 
   // Precompute how many bank questions exist per section, so each question's individual
@@ -483,21 +578,17 @@
   // or the source toggles change, so the numbers shown always reflect what's
   // actually reachable under the current filter combination.
 
-  // Same "does this section actually exist in the bank" rule as sectionAllowed,
-  // but independent of state.topic so it can be evaluated for an arbitrary topic
-  // value (used for both 'all' and every specific topic).
-  function sectionAllowedForTopic(section, topic){
-    return topic === 'all' ? bankSections.has(section) : section === topic;
+  // topics is a Set of selected section names (same shape as state.selectedTopics).
+  // Passed explicitly rather than read from state so these stay reusable for an
+  // arbitrary topic set, same as before.
+  function bankPoolForTopic(topics){
+    return bankQs.filter(q => topics.has(q.section));
   }
-
-  function bankPoolForTopic(topic){
-    return topic === 'all' ? bankQs : bankQs.filter(q => q.section === topic);
+  function genConceptPoolForTopic(topics){
+    return genConcept.filter(q => topics.has(q.section));
   }
-  function genConceptPoolForTopic(topic){
-    return genConcept.filter(q => sectionAllowedForTopic(q.section, topic));
-  }
-  function genTemplatePoolForTopic(topic){
-    return genTemplates.filter(t => sectionAllowedForTopic(t.section, topic));
+  function genTemplatePoolForTopic(topics){
+    return genTemplates.filter(t => topics.has(t.section));
   }
 
   // A question/template with no qtype (or an empty one) is untagged and counts
@@ -509,10 +600,10 @@
   }
 
   function updateCounts(){
-    const topic = state.topic;
-    const bankPool = bankPoolForTopic(topic);
-    const conceptPool = genConceptPoolForTopic(topic);
-    const templatePool = genTemplatePoolForTopic(topic);
+    const topics = state.selectedTopics;
+    const bankPool = bankPoolForTopic(topics);
+    const conceptPool = genConceptPoolForTopic(topics);
+    const templatePool = genTemplatePoolForTopic(topics);
 
     document.getElementById('bankCount').textContent = `${bankPool.length} שאלות קבועות · עובד תמיד בלי אינטרנט`;
     // All spaces except the one after '+' are non-breaking (&nbsp;), so the
@@ -583,24 +674,202 @@
   });
   refreshQtypeToggleUI();
 
-  // ---------------- Topic filter ----------------
-  function buildTopicList(){
+  // ---------------- Topic filter (multi-select) ----------------
+  // Ranked order for display: full priority order first, then anything unranked
+  // (shouldn't normally happen — would mean question_bank.js has a section not
+  // listed in PRIORITY_ORDER above). Computed once; the set of sections is fixed
+  // for the life of the page.
+  const orderedSections = (() => {
     const arr = Array.from(bankSections);
-    // full priority order first, then anything unranked (shouldn't normally happen —
-    // would mean question_bank.js has a section not listed in PRIORITY_ORDER above)
     const prio = PRIORITY_ORDER.filter(s => arr.includes(s));
     const rest = arr.filter(s => !PRIORITY_ORDER.includes(s));
-    const ordered = ['all', ...prio, ...rest];
-    topicFilter.innerHTML = '';
-    ordered.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s;
-      opt.textContent = s === 'all' ? 'כל הנושאים' : s;
-      topicFilter.appendChild(opt);
+    return [...prio, ...rest];
+  })();
+
+  function buildTopicList(){
+    topicList.innerHTML = '';
+    orderedSections.forEach(section => {
+      const row = document.createElement('label');
+      row.className = 'topic-option';
+      row.setAttribute('role', 'option');
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = section;
+
+      const box = document.createElement('span');
+      box.className = 'topic-checkbox';
+
+      const txt = document.createElement('span');
+      txt.textContent = section;
+
+      row.appendChild(cb);
+      row.appendChild(box);
+      row.appendChild(txt);
+      topicList.appendChild(row);
+
+      cb.addEventListener('change', () => {
+        if(cb.checked) state.selectedTopics.add(section);
+        else state.selectedTopics.delete(section);
+        row.classList.toggle('checked', cb.checked);
+        refreshTopicUI();
+      });
     });
   }
+
+  // Reflects state.selectedTopics onto every checkbox row — used after "הכל" / "נקה"
+  // change the set in bulk, since those don't go through the per-checkbox listener.
+  function syncTopicCheckboxes(){
+    topicList.querySelectorAll('.topic-option').forEach(row => {
+      const cb = row.querySelector('input');
+      const checked = state.selectedTopics.has(cb.value);
+      cb.checked = checked;
+      row.classList.toggle('checked', checked);
+    });
+  }
+
+  // ---------------- Topic label truncation (pixel-width aware) ----------------
+  // CSS ellipsis alone can't do this: the label may need to drop whole topics
+  // (not just clip characters) before it fits, and which fallback applies
+  // depends on how many topics are selected. So we measure real rendered width
+  // using an offscreen clone of the label (same font, single line) and decide
+  // in JS. See computeTopicLabel() below for the exact rule ladder.
+  const topicMeasureEl = document.createElement('span');
+  topicMeasureEl.style.position = 'absolute';
+  topicMeasureEl.style.visibility = 'hidden';
+  topicMeasureEl.style.whiteSpace = 'nowrap';
+  topicMeasureEl.style.pointerEvents = 'none';
+  topicMeasureEl.style.left = '-9999px';
+  topicMeasureEl.style.top = '0';
+  document.body.appendChild(topicMeasureEl);
+
+  // Copy the label's computed font once — it's static for the life of the page,
+  // no need to re-read getComputedStyle on every measurement.
+  (function copyLabelFont(){
+    const cs = getComputedStyle(topicTriggerLabel);
+    topicMeasureEl.style.fontFamily = cs.fontFamily;
+    topicMeasureEl.style.fontSize = cs.fontSize;
+    topicMeasureEl.style.fontWeight = cs.fontWeight;
+    topicMeasureEl.style.fontStyle = cs.fontStyle;
+    topicMeasureEl.style.letterSpacing = cs.letterSpacing;
+  })();
+
+  function measureTopicText(text){
+    topicMeasureEl.textContent = text;
+    return topicMeasureEl.getBoundingClientRect().width;
+  }
+
+  // Shrinks `text` character-by-character (binary search) until `text.slice(0,n) + suffix`
+  // fits within maxWidth. Used only as the last resort, when even a single topic
+  // name (with " ..." after it) is too wide for the trigger.
+  function truncateToWidth(text, maxWidth, suffix){
+    if(measureTopicText(text + suffix) <= maxWidth) return text + suffix;
+    let lo = 0, hi = text.length, best = suffix.trim();
+    while(lo <= hi){
+      const mid = (lo + hi) >> 1;
+      const candidate = text.slice(0, mid).trimEnd() + suffix;
+      if(measureTopicText(candidate) <= maxWidth){
+        best = candidate;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return best;
+  }
+
+  // Rule ladder (topics are already in priority order):
+  //  - all topics selected, or 0 selected: handled by the caller, not here.
+  //  - 1-2 topics AND the full ", "-joined text fits: show it as-is.
+  //  - exactly 2 topics, doesn't fit: try "topic1 ..."; if even that overflows,
+  //    character-truncate topic1.
+  //  - 3+ topics: try "topic1, topic2 ..."; if that overflows, fall through to
+  //    the same "topic1 ..." / character-truncate steps as the 2-topic case.
+  function computeTopicLabel(chosen, maxWidth){
+    const full = chosen.join(', ');
+    if(chosen.length <= 2 && measureTopicText(full) <= maxWidth) return full;
+
+    if(chosen.length >= 3){
+      const twoTopics = `${chosen[0]}, ${chosen[1]} ...`;
+      if(measureTopicText(twoTopics) <= maxWidth) return twoTopics;
+    }
+
+    const oneTopic = `${chosen[0]} ...`;
+    if(measureTopicText(oneTopic) <= maxWidth) return oneTopic;
+
+    return truncateToWidth(chosen[0], maxWidth, ' ...');
+  }
+
+  // Updates the closed-trigger label and the "סגור" button's enabled state,
+  // then re-runs the count panels (they depend on the topic filter too).
+  function refreshTopicUI(){
+    if(state.selectedTopics.size === orderedSections.length){
+      topicTriggerLabel.textContent = 'הכל';
+    } else if(state.selectedTopics.size === 0){
+      topicTriggerLabel.textContent = 'לא נבחר נושא';
+    } else {
+      const chosen = orderedSections.filter(s => state.selectedTopics.has(s));
+      const maxWidth = topicTriggerLabel.clientWidth;
+      topicTriggerLabel.textContent = computeTopicLabel(chosen, maxWidth);
+    }
+    // Can't close with nothing selected — that would leave the quiz with no
+    // reachable questions and no visible way to fix it without reopening.
+    topicCloseBtn.disabled = state.selectedTopics.size === 0;
+    updateCounts();
+  }
+
+  // The trigger's available width changes with the viewport (e.g. rotating a
+  // phone, resizing a window), so re-run the truncation logic when it does.
+  let topicResizeRaf = null;
+  window.addEventListener('resize', () => {
+    if(topicResizeRaf) return;
+    topicResizeRaf = requestAnimationFrame(() => {
+      topicResizeRaf = null;
+      refreshTopicUI();
+    });
+  });
+
+  function openTopicPanel(){
+    topicPanel.classList.add('open');
+    topicTrigger.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', onDocumentClickForTopicPanel);
+    document.addEventListener('keydown', onKeydownForTopicPanel);
+  }
+  function closeTopicPanel(){
+    topicPanel.classList.remove('open');
+    topicTrigger.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', onDocumentClickForTopicPanel);
+    document.removeEventListener('keydown', onKeydownForTopicPanel);
+  }
+  function onDocumentClickForTopicPanel(e){
+    if(!topicSelect.contains(e.target)) closeTopicPanel();
+  }
+  function onKeydownForTopicPanel(e){
+    if(e.key === 'Escape') closeTopicPanel();
+  }
+
+  topicTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if(topicPanel.classList.contains('open')) closeTopicPanel(); else openTopicPanel();
+  });
+  topicSelectAllBtn.addEventListener('click', () => {
+    state.selectedTopics = new Set(orderedSections);
+    syncTopicCheckboxes();
+    refreshTopicUI();
+  });
+  topicClearBtn.addEventListener('click', () => {
+    state.selectedTopics = new Set();
+    syncTopicCheckboxes();
+    refreshTopicUI();
+  });
+  topicCloseBtn.addEventListener('click', () => {
+    if(!topicCloseBtn.disabled) closeTopicPanel();
+  });
+
   buildTopicList();
-  topicFilter.addEventListener('change', ()=>{ state.topic = topicFilter.value; updateCounts(); });
+  state.selectedTopics = new Set(orderedSections); // default: all topics selected
+  syncTopicCheckboxes();
+  refreshTopicUI();
 
   // ---------------- Question selection ----------------
   function weightedPick(arr, weightFn){
@@ -621,10 +890,13 @@
   // returns null and the caller shows the "no questions found, try widening the
   // filter" empty state — that's a more honest result than quietly serving an
   // off-topic question instead.
+  // Always weighted-pick, regardless of how many topics are selected: within a
+  // single selected section every question shares the same weight, so this
+  // reduces to a plain uniform pick in that case — same result as before, just
+  // without a separate branch for it.
   function pickBankQuestion(){
-    const pool = state.topic === 'all' ? bankQs : bankQs.filter(q => q.section === state.topic);
+    const pool = bankQs.filter(q => state.selectedTopics.has(q.section));
     if(pool.length === 0) return null;
-    if(state.topic !== 'all') return pool[Math.floor(Math.random()*pool.length)];
     return weightedPick(pool, q => perQuestionWeight(q.section));
   }
 
