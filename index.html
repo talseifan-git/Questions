@@ -731,32 +731,27 @@
   // ---------------- Topic label truncation (pixel-width aware) ----------------
   // CSS ellipsis alone can't do this: the label may need to drop whole topics
   // (not just clip characters) before it fits, and which fallback applies
-  // depends on how many topics are selected. So we measure real rendered width
-  // using an offscreen clone of the label (same font, single line) and decide
-  // in JS. See computeTopicLabel() below for the exact rule ladder.
-  const topicMeasureEl = document.createElement('span');
-  topicMeasureEl.style.position = 'absolute';
-  topicMeasureEl.style.visibility = 'hidden';
-  topicMeasureEl.style.whiteSpace = 'nowrap';
-  topicMeasureEl.style.pointerEvents = 'none';
-  topicMeasureEl.style.left = '-9999px';
-  topicMeasureEl.style.top = '0';
-  document.body.appendChild(topicMeasureEl);
+  // depends on how many topics are selected. So we measure real rendered text
+  // width and decide in JS — see computeTopicLabel() below for the rule ladder.
+  //
+  // Measuring via canvas.measureText() rather than an offscreen DOM element on
+  // purpose: an earlier version used a hidden <span> positioned far outside the
+  // viewport (left:-9999px) to measure width, and on mobile browsers that
+  // triggered a rendering/compositing crash (blank/black screen) the moment its
+  // text content changed — desktop tolerated it, phones didn't. A canvas never
+  // touches the DOM at all (it's created but never appended to the page), so it
+  // can't trigger that class of bug.
+  const topicMeasureCtx = document.createElement('canvas').getContext('2d');
 
   // Copy the label's computed font once — it's static for the life of the page,
   // no need to re-read getComputedStyle on every measurement.
-  (function copyLabelFont(){
+  (function setTopicMeasureFont(){
     const cs = getComputedStyle(topicTriggerLabel);
-    topicMeasureEl.style.fontFamily = cs.fontFamily;
-    topicMeasureEl.style.fontSize = cs.fontSize;
-    topicMeasureEl.style.fontWeight = cs.fontWeight;
-    topicMeasureEl.style.fontStyle = cs.fontStyle;
-    topicMeasureEl.style.letterSpacing = cs.letterSpacing;
+    topicMeasureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
   })();
 
   function measureTopicText(text){
-    topicMeasureEl.textContent = text;
-    return topicMeasureEl.getBoundingClientRect().width;
+    return topicMeasureCtx.measureText(text).width;
   }
 
   // Shrinks `text` character-by-character (binary search) until `text.slice(0,n) + suffix`
