@@ -1,5 +1,5 @@
 // bump this on every deploy that changes any cached file, to invalidate old caches
-const CACHE_VERSION = 'v11';
+const CACHE_VERSION = 'v12';
 const CACHE_NAME = `chovshim-tirgul-${CACHE_VERSION}`;
 
 const APP_SHELL = [
