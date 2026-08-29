@@ -31,6 +31,8 @@
     --amber-dim: #5c451c;
     --blue: #7fb2e0;
     --blue-dim: #1c2c3a;
+    --rose: #d491a4;      /* smoky pink — the מבנה שאלה accent */
+    --rose-dim: #3a2630;
     --teal: #4fc9c4;
     --teal-dim: #163330;
     --mono: 'Courier New', ui-monospace, Consolas, monospace;
@@ -111,6 +113,9 @@
     user-select: none;
     transition: border-color .15s, background .15s;
   }
+  /* Six format toggles would each stretch to a full row at flex:1 1 200px, so give
+     this group a smaller basis — three across on desktop, two on a phone. */
+  .fmt-toggles .toggle{ flex: 1 1 150px; }
   .toggle input{ display:none; }
   .toggle .box{
     width:18px; height:18px; border-radius:5px;
@@ -142,6 +147,14 @@
      counts get a brighter, slightly teal-tinted color specifically when the
      card is active. */
   .toggle.qtype.active .toggle-count{ color:#bfeae7; }
+
+  /* Format toggles (מבנה שאלה) get the third accent — smoky pink — matching
+     the .tag.fmt badge on the question card, so the filter you flipped and the
+     label on what you got are visibly the same thing. */
+  .toggle.fmt.active{ border-color: var(--rose); background: var(--rose-dim); }
+  .toggle.fmt.active .box{ background: var(--rose); border-color: var(--rose); }
+  .toggle.fmt.active .box::after{ color:#0f1318; }
+  .toggle.fmt.active .toggle-count{ color:#eec6d1; }
 
   .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 
@@ -270,6 +283,14 @@
   .tag.bank{ border-color:#3a5a7a; color:#7fb2e0; }
   .tag.generated{ border-color:#5a3a7a; color:#c199e8; }
   .tag.qid{ color: var(--muted-2); border-color: var(--line); font-weight:500; }
+  /* Three tags, three accents, so the strip is readable at a glance:
+     source = blue/purple (.tag.bank / .tag.generated), topic = neutral grey
+     (the base .tag), format = smoky pink (--rose). The format badge, the
+     מבנה שאלה filter panel and the chain banner all share --rose, so the
+     filter you flipped and the label on what you got read as one thing.
+     Note the ☑/🔗/🗂️/🧩 instruction lines under the question text stay amber:
+     they are per-question instructions, not the format filter's accent. */
+  .tag.fmt{ border-color: var(--rose); color: var(--rose); }
   .qtext{ font-size: 18.5px; font-weight: 600; margin: 0 0 20px; line-height:1.55; white-space: pre-wrap; }
   .multi-instruction{
     font-size: 13.5px; color: var(--amber); font-weight:700; margin: -12px 0 16px;
@@ -340,6 +361,18 @@
   }
 
   .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+
+  /* Banner shown above the question card while a linked sequence is in progress.
+     Lives OUTSIDE #qArea on purpose: the match/group/table-fill renderers rewrite
+     qArea.innerHTML on every interaction, which would wipe it out. */
+  .chain-banner{
+    display:flex; align-items:center; gap:8px;
+    margin: 0 0 10px; padding: 9px 13px;
+    border:1px solid var(--rose); border-radius:10px;
+    background: var(--rose-dim); color: var(--text);
+    font-size:13.5px; font-weight:600;
+  }
+  .chain-banner[hidden]{ display:none; }
 
   .empty-state{ text-align:center; padding: 60px 20px; color: var(--muted); }
   .empty-state .big{ font-size:42px; margin-bottom:12px; }
@@ -493,9 +526,9 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">מד"א · קורס חובשי רפואת חירום</div>
-    <h1>תרגול לפני מבחן</h1>
-    <p class="subtitle">שאלות מהבנק, שאלות שנוצרות מתוכן המצגות, או שילוב של השניים — הכל רץ מקומית, בלי אינטרנט.</p>
+    <div class="eyebrow">מד"א</div>
+    <h1>שאלות תרגול</h1>
+    <p class="subtitle">רץ מקומית, בלי אינטרנט.</p>
     <svg class="ecg" viewBox="0 0 400 34" preserveAspectRatio="none">
       <path d="M0,17 L60,17 L75,17 L85,4 L95,30 L105,10 L115,17 L140,17 L400,17"/>
     </svg>
@@ -508,16 +541,16 @@
         <input type="checkbox" checked>
         <span class="box"></span>
         <span>
-          <div class="toggle-label">מהקובץ (בנק שאלות)</div>
-          <div class="toggle-sub" id="bankCount">— שאלות קבועות · עובד תמיד בלי אינטרנט</div>
+          <div class="toggle-label">מהקובץ</div>
+          <div class="toggle-sub" id="bankCount">— שאלות</div>
         </span>
       </label>
       <label class="toggle gen active" id="toggleGen">
         <input type="checkbox" checked>
         <span class="box"></span>
         <span>
-          <div class="toggle-label">מהמצגת (שאלות מיוצרות)</div>
-          <div class="toggle-sub" id="genCount">— חלק נוסחתי אקראי, חלק קבוע מהתוכן</div>
+          <div class="toggle-label">מהמצגת</div>
+          <div class="toggle-sub" id="genCount">— קבועות + — תבניות</div>
         </span>
       </label>
     </div>
@@ -551,6 +584,63 @@
         </span>
       </label>
     </div>
+    <p class="panel-title">מבנה שאלה</p>
+    <div class="source-toggles fmt-toggles">
+      <label class="toggle fmt active" id="toggleFmtSingle">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">סגורה</div>
+          <div class="toggle-sub">רק תשובה אחת נכונה</div>
+          <div class="toggle-count" id="countFmtSingle"></div>
+        </span>
+      </label>
+      <label class="toggle fmt active" id="toggleFmtMulti">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">רב-ברירה</div>
+          <div class="toggle-sub">לפחות תשובה אחת נכונה</div>
+          <div class="toggle-count" id="countFmtMulti"></div>
+        </span>
+      </label>
+      <label class="toggle fmt active" id="toggleFmtMatch">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">שידוך</div>
+          <div class="toggle-sub">חיבור פריטים משתי רשימות</div>
+          <div class="toggle-count" id="countFmtMatch"></div>
+        </span>
+      </label>
+      <label class="toggle fmt active" id="toggleFmtGroup">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">קיבוץ</div>
+          <div class="toggle-sub">מיון פריטים לקטגוריות</div>
+          <div class="toggle-count" id="countFmtGroup"></div>
+        </span>
+      </label>
+      <label class="toggle fmt active" id="toggleFmtTable">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">טבלה</div>
+          <div class="toggle-sub">שיבוץ פריטים בטבלה</div>
+          <div class="toggle-count" id="countFmtTable"></div>
+        </span>
+      </label>
+      <label class="toggle fmt active" id="toggleFmtChain">
+        <input type="checkbox" checked>
+        <span class="box"></span>
+        <span>
+          <div class="toggle-label">שרשרת</div>
+          <div class="toggle-sub">רצף שאלות</div>
+          <div class="toggle-count" id="countFmtChain"></div>
+        </span>
+      </label>
+    </div>
     <p class="panel-title">נושא</p>
     <div class="row2">
       <div class="topic-select" id="topicSelect">
@@ -570,6 +660,8 @@
       <button class="btn btn-primary" id="nextBtn">השאלה הבאה</button>
     </div>
   </div>
+
+  <div id="chainBanner" class="chain-banner" hidden></div>
 
   <div id="qArea">
     <div class="empty-state">
@@ -602,6 +694,10 @@
     useBank: true,
     useGen: true,
     qtypes: new Set(['concept', 'numeric', 'scenario']), // all on by default
+    // Structural format of the question — a separate axis from qtype above.
+    // qtype says what the question is ABOUT (concept / numeric / scenario);
+    // formats says how it is ANSWERED. See formatOf() further down.
+    formats: new Set(['single', 'multi', 'match', 'group', 'table', 'chain']),
     // Selected topic sections. Populated in buildTopicList() below, right after
     // load, with every section in bankSections — i.e. the default is "all topics",
     // represented as the full set rather than a separate 'all' sentinel. Filtering
@@ -614,8 +710,18 @@
     selectedLetters: new Set(),  // multi-select: currently checked letters
     answered: false,
     stats: { first: 0, second: 0, missed: 0 }, // always starts at zero on load — no cross-session persistence
-    recentKeys: [] // FIFO of the last N question dedup-keys, so we can avoid immediate repeats
+    recentKeys: [], // FIFO of the last N question dedup-keys, so we can avoid immediate repeats
+    // Non-null while a linked question sequence is being walked:
+    // { list: [q1, q2, ...], index: <0-based position currently displayed> }.
+    // See the "Chained sequences" section below.
+    activeChain: null
   };
+
+  // When true, a sequence that has been entered always runs to its last step.
+  // Set to a number between 0 and 1 instead to make each continuation a coin
+  // flip (e.g. 0.7 = 70% chance of showing the next step, otherwise the
+  // sequence is abandoned and a normal random question follows).
+  const CHAIN_CONTINUE = true;
 
   // How many most-recently-asked questions to avoid repeating.
   const NO_REPEAT_WINDOW = 20;
@@ -652,7 +758,9 @@
     'עבודת הצוות',
     'קבלת החלטות ודיווחים',
     'מענה מד"א בשעת חירום',
-    'אג"מ ונהלים'
+    'אג"ם ונהלים'   // NOTE: must match question_bank.js exactly (ם sofit, not מ) —
+                    // a mismatch here silently drops the section to the bottom of the
+                    // topic list and to the lowest random-selection weight.
   ];
   // Highest-priority section gets the largest weight, decreasing linearly down the list.
   function priorityWeight(section){
@@ -665,6 +773,7 @@
 
   // ---------------- DOM refs ----------------
   const qArea = document.getElementById('qArea');
+  const chainBanner = document.getElementById('chainBanner');
   const nextBtn = document.getElementById('nextBtn');
   const topicSelect = document.getElementById('topicSelect');
   const topicTrigger = document.getElementById('topicTrigger');
@@ -679,6 +788,22 @@
   const toggleConcept = document.getElementById('toggleConcept');
   const toggleNumeric = document.getElementById('toggleNumeric');
   const toggleScenario = document.getElementById('toggleScenario');
+  const fmtToggles = {
+    single: document.getElementById('toggleFmtSingle'),
+    multi:  document.getElementById('toggleFmtMulti'),
+    match:  document.getElementById('toggleFmtMatch'),
+    group:  document.getElementById('toggleFmtGroup'),
+    table:  document.getElementById('toggleFmtTable'),
+    chain:  document.getElementById('toggleFmtChain')
+  };
+  const fmtCountEls = {
+    single: document.getElementById('countFmtSingle'),
+    multi:  document.getElementById('countFmtMulti'),
+    match:  document.getElementById('countFmtMatch'),
+    group:  document.getElementById('countFmtGroup'),
+    table:  document.getElementById('countFmtTable'),
+    chain:  document.getElementById('countFmtChain')
+  };
 
   // ---------------- Setup source toggles ----------------
   const bankQs = (window.QUESTION_BANK || []);
@@ -695,6 +820,112 @@
   const bankSections = new Set(bankQs.map(q => q.section));
   function sectionAllowed(section){
     return state.selectedTopics.has(section);
+  }
+
+  // ---------------- Question formats (מבנה שאלה) ----------------
+  // Six mutually exclusive structural formats. Everything that renders a question
+  // and everything that filters one goes through formatOf(), so this function is
+  // the single definition of "what kind of question is this":
+  //
+  //   single  סגורה     — one correct letter out of several
+  //   multi   רב-ברירה  — a set of correct letters (q.multi === true)
+  //   match   שידוך     — q.type === 'match'
+  //   group   קיבוץ     — q.type === 'group'
+  //   table   טבלה      — q.type === 'table-fill'
+  //   chain   שרשרת     — q.chain is set: the question is one step of an ordered
+  //                       sequence about a single evolving scenario
+  //
+  // chain is checked FIRST and wins over the others on purpose. A chained step is
+  // usually a plain single-select underneath, but what makes it what it is — and
+  // what the person is opting in or out of with the filter — is the sequence, not
+  // the widget. Turning "שרשרת" off therefore removes every step of every sequence,
+  // and turning it on brings the whole sequence back as a unit. (Consequence worth
+  // knowing: a chained step is NOT counted under סגורה/רב-ברירה/שידוך etc., so the
+  // six counts add up to the total with no double counting.)
+  const FORMAT_LABELS = {
+    single: 'סגורה', multi: 'רב-ברירה', match: 'שידוך',
+    group: 'קיבוץ', table: 'טבלה', chain: 'שרשרת'
+  };
+  const FORMAT_KEYS = Object.keys(FORMAT_LABELS);
+
+  function formatOf(q){
+    if(!q) return 'single';
+    if(q.chain) return 'chain';
+    if(q.type === 'match') return 'match';
+    if(q.type === 'group') return 'group';
+    if(q.type === 'table-fill') return 'table';
+    return q.multi ? 'multi' : 'single';
+  }
+  // Templates describe a question they haven't generated yet, so their format has to
+  // be read off the template object. Every template in generated_content.js today
+  // produces a single-select numeric question; an explicit "format" field on the
+  // template overrides that if one is ever added that doesn't.
+  function formatOfTemplate(t){
+    return (t && t.format) || 'single';
+  }
+  function formatAllowed(fmt){
+    return state.formats.has(fmt);
+  }
+  function matchesFormat(q){
+    return formatAllowed(formatOf(q));
+  }
+
+  // ---------------- Chained sequences (רצף שאלות מקושרות) ----------------
+  // A question may declare that it belongs to an ordered sequence that must always
+  // be shown from its first step onward — typically a case scenario that keeps
+  // developing ("בהמשך לשאלה הקודמת: ..."), where a later step is meaningless on its
+  // own. Two extra fields on the question object do it:
+  //
+  //   "chain":     "TRAUMA_FALL_1"   // shared id — any string, same for every step
+  //   "chainStep": 1                 // 1-based position; must be unique within the chain
+  //
+  // Everything else about the question stays exactly as it is today — a chained
+  // question can be single-select, multi-select, match, group or table-fill.
+  //
+  // Two rules enforce "never show step N without having shown 1..N-1":
+  //   (1) only step 1 is reachable by random selection (see chainableForPick below),
+  //       so a sequence can only ever be ENTERED at its head;
+  //   (2) once entered, goNext() walks the remaining steps in order, bypassing the
+  //       random picker, the no-repeat window and the source/type/topic filters —
+  //       otherwise a filter change mid-sequence could strand the person halfway.
+  //
+  // Because of (1), the qtype tags on step 1 are what decide whether the whole
+  // sequence is reachable at all: tag every step of a chain identically (and give
+  // them all the same section) unless you specifically want otherwise.
+  const chains = {};
+  [...bankQs, ...genConcept].forEach(q => {
+    if(!q || !q.chain) return;
+    (chains[q.chain] = chains[q.chain] || []).push(q);
+  });
+  Object.keys(chains).forEach(key => {
+    chains[key].sort((a, b) => (a.chainStep || 0) - (b.chainStep || 0));
+  });
+
+  function chainOf(q){
+    if(!q || !q.chain) return null;
+    const list = chains[q.chain];
+    return (list && list.length > 1) ? list : null; // a 1-item "chain" is just a normal question
+  }
+  // True for anything the random picker is allowed to serve: unchained questions,
+  // plus the first step of each chain.
+  function chainableForPick(q){
+    const list = chainOf(q);
+    return !list || list[0] === q;
+  }
+  function chainShouldContinue(){
+    if(CHAIN_CONTINUE === true) return true;
+    if(typeof CHAIN_CONTINUE === 'number') return Math.random() < CHAIN_CONTINUE;
+    return false;
+  }
+  function updateChainBanner(){
+    const c = state.activeChain;
+    if(!c){ chainBanner.hidden = true; chainBanner.textContent = ''; return; }
+    chainBanner.hidden = false;
+    chainBanner.textContent = `⛓️ רצף שאלות — שאלה ${c.index + 1} מתוך ${c.list.length}`;
+  }
+  function chainHasMoreSteps(){
+    const c = state.activeChain;
+    return !!(c && c.index < c.list.length - 1);
   }
 
   // Precompute how many bank questions exist per section, so each question's individual
@@ -742,12 +973,12 @@
     const conceptPool = genConceptPoolForTopic(topics);
     const templatePool = genTemplatePoolForTopic(topics);
 
-    document.getElementById('bankCount').textContent = `${bankPool.length} שאלות קבועות · עובד תמיד בלי אינטרנט`;
+    document.getElementById('bankCount').textContent = `${bankPool.length} שאלות`;
     // All spaces except the one after '+' are non-breaking (&nbsp;), so the
     // <wbr> right after '+' is the ONLY point the browser is allowed to wrap
     // at — otherwise it prefers breaking at whichever space best fills the
     // line (e.g. after "תבניות"), which is what the previous version did.
-    document.getElementById('genCount').innerHTML = `${conceptPool.length}&nbsp;שאלות&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templatePool.length}&nbsp;תבניות&nbsp;מספריות&nbsp;אקראיות`;
+    document.getElementById('genCount').innerHTML = `${conceptPool.length}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templatePool.length}&nbsp;תבניות`;
 
     // Per-qtype counts only include the sources that are actually enabled right
     // now, so they show what the person would really get, not a theoretical max.
@@ -765,8 +996,47 @@
       // All other spaces are &nbsp; so '+' stays the ONLY allowed break point
       // (a plain space there would let the browser wrap after "תבניות" instead,
       // which is the bug this fixes).
-      countEls[t].innerHTML = templates > 0 ? `${fixed}&nbsp;שאלות&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templates}&nbsp;תבניות&nbsp;אקראיות` : `${fixed} שאלות`;
+      countEls[t].innerHTML = templates > 0 ? `${fixed}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templates}&nbsp;תבניות` : `${fixed} שאלות`;
     });
+
+    // Per-format counts. Same rule as the qtype counts above: they reflect the topic
+    // filter and the enabled sources, but not the other two filter axes — so each
+    // panel shows what that panel alone controls.
+    const fmtFixed = {}, fmtTemplates = {};
+    FORMAT_KEYS.forEach(f => { fmtFixed[f] = 0; fmtTemplates[f] = 0; });
+    if(state.useBank) bankPool.forEach(q => { fmtFixed[formatOf(q)]++; });
+    if(state.useGen){
+      conceptPool.forEach(q => { fmtFixed[formatOf(q)]++; });
+      templatePool.forEach(t => { fmtTemplates[formatOfTemplate(t)]++; });
+    }
+    // The chain count is reported in sequences as well as questions — "4 שאלות"
+    // is misleading for a format whose whole point is that the questions arrive
+    // together as one unit.
+    const chainSeqCount = countChainsIn(bankPool, conceptPool);
+    FORMAT_KEYS.forEach(f => {
+      const el = fmtCountEls[f];
+      if(!el) return;
+      if(f === 'chain'){
+        el.textContent = chainSeqCount === 0
+          ? 'אין רצפים'
+          : `${chainSeqCount} רצפים · ${fmtFixed.chain} שאלות`;
+        return;
+      }
+      el.innerHTML = fmtTemplates[f] > 0
+        ? `${fmtFixed[f]}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${fmtTemplates[f]}&nbsp;תבניות`
+        : `${fmtFixed[f]} שאלות`;
+    });
+  }
+
+  // How many distinct sequences are represented in the given pools. Counted by
+  // chain id rather than by question, so a 4-step sequence counts once.
+  function countChainsIn(){
+    const seen = new Set();
+    for(const pool of arguments){
+      if(!pool) continue;
+      pool.forEach(q => { if(q.chain) seen.add(q.chain); });
+    }
+    return seen.size;
   }
 
   function refreshToggleUI(){
@@ -810,6 +1080,25 @@
     });
   });
   refreshQtypeToggleUI();
+
+  // ---------------- Setup format toggles (any combo of the six) ----------------
+  function refreshFmtToggleUI(){
+    FORMAT_KEYS.forEach(f => {
+      const active = state.formats.has(f);
+      fmtToggles[f].classList.toggle('active', active);
+      fmtToggles[f].querySelector('input').checked = active;
+    });
+    updateCounts();
+  }
+  FORMAT_KEYS.forEach(f => {
+    fmtToggles[f].addEventListener('click', (e) => {
+      e.preventDefault();
+      if(state.formats.has(f) && state.formats.size === 1) return; // can't turn off the last one
+      if(state.formats.has(f)) state.formats.delete(f); else state.formats.add(f);
+      refreshFmtToggleUI();
+    });
+  });
+  refreshFmtToggleUI();
 
   // ---------------- Topic filter (multi-select) ----------------
   // Ranked order for display: full priority order first, then anything unranked
@@ -1027,14 +1316,14 @@
   // reduces to a plain uniform pick in that case — same result as before, just
   // without a separate branch for it.
   function pickBankQuestion(){
-    const pool = bankQs.filter(q => state.selectedTopics.has(q.section));
+    const pool = bankQs.filter(q => state.selectedTopics.has(q.section) && chainableForPick(q) && matchesFormat(q));
     if(pool.length === 0) return null;
     return weightedPick(pool, q => perQuestionWeight(q.section));
   }
 
   function pickGeneratedQuestion(){
-    const conceptPool = genConcept.filter(q => sectionAllowed(q.section));
-    const templatePool = genTemplates.filter(t => sectionAllowed(t.section));
+    const conceptPool = genConcept.filter(q => sectionAllowed(q.section) && chainableForPick(q) && matchesFormat(q));
+    const templatePool = genTemplates.filter(t => sectionAllowed(t.section) && formatAllowed(formatOfTemplate(t)));
     if(conceptPool.length === 0 && templatePool.length === 0) return null;
     // mix concept questions (fixed) and template-generated (infinite), weighted
     // 50/50 when both are available for the current filter, otherwise whichever exists
@@ -1081,7 +1370,7 @@
     let fallback = null;
     for(let i = 0; i < 30; i++){
       const q = pickNextQuestion();
-      if(q && matchesQtype(q)){
+      if(q && matchesQtype(q) && matchesFormat(q)){
         if(!fallback) fallback = q;
         if(!state.recentKeys.includes(questionKey(q))) return q;
       }
@@ -1121,6 +1410,7 @@
         <div class="qmeta">
           <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
+          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
         </div>
         <p class="qtext">${bidiSafe(q.question)}</p>
@@ -1387,7 +1677,8 @@
     box.classList.toggle('show', !!(inner || noteHtml));
 
     const actions = document.getElementById('actionsWrap');
-    actions.innerHTML = `<button class="btn btn-primary" id="nextQBtn">השאלה הבאה</button>`;
+    const nextLabel = chainHasMoreSteps() ? 'המשך ברצף' : 'השאלה הבאה';
+    actions.innerHTML = `<button class="btn btn-primary" id="nextQBtn">${nextLabel}</button>`;
     document.getElementById('nextQBtn').addEventListener('click', goNext);
   }
 
@@ -1455,6 +1746,7 @@
         <div class="qmeta">
           <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
+          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
         </div>
         <p class="qtext">${bidiSafe(q.question)}</p>
@@ -1628,6 +1920,7 @@
         <div class="qmeta">
           <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
+          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
         </div>
         <p class="qtext">${bidiSafe(q.question)}</p>
@@ -1708,6 +2001,24 @@
   // ================================================================
   // TABLE-FILL (מילוי טבלה)
   // ================================================================
+  // table-fill questions come in two shapes in the content files:
+  //   (a) rows/cols as OBJECTS  — { "r1": "תינוק", ... }, cells keyed by those keys;
+  //   (b) rows/cols as ARRAYS   — [ "תינוק", ... ],       cells keyed by the LABELS.
+  // Object.keys() gives "0","1","2" for (b), which still indexes the arrays fine for
+  // labels but does NOT index q.cells — that lookup has to go through the label.
+  // These two helpers absorb the difference so the renderer below stays shape-agnostic.
+  function tfLabel(map, key){
+    const v = map[key];
+    return v === undefined ? key : v;
+  }
+  function tfCellValue(q, rk, ck){
+    const rowKey = Array.isArray(q.rows) ? q.rows[rk] : rk;
+    const colKey = Array.isArray(q.cols) ? q.cols[ck] : ck;
+    const row = (q.cells && (q.cells[rowKey] !== undefined ? q.cells[rowKey] : q.cells[rk])) || {};
+    const v = row[colKey] !== undefined ? row[colKey] : row[ck];
+    return v === undefined ? '' : v;
+  }
+
   function renderTableFillQuestion(q){
     state.tfRowKeys = Object.keys(q.rows);
     state.tfColKeys = Object.keys(q.cols);
@@ -1744,7 +2055,7 @@
         classes.push(tfCellOf(chipId) === chipId ? 'correct-reveal' : 'wrong-reveal');
       }
       const rk = tfRowOfChip(chipId), ck = chipId.split('-')[1];
-      return `<div class="${classes.join(' ')}" data-chip="${chipId}"><span class="bar"></span><span class="val">${bidiSafe(q.cells[rk][ck])}</span></div>`;
+      return `<div class="${classes.join(' ')}" data-chip="${chipId}"><span class="bar"></span><span class="val">${bidiSafe(tfCellValue(q, rk, ck))}</span></div>`;
     }
 
     const poolHtml = rowKeys.map((rk, i) => {
@@ -1752,7 +2063,7 @@
       if(remaining.length === 0) return '';
       return `
         <div class="tf-pool-group tf-row-${i % 4}">
-          <div class="tf-pool-header"><span class="swatch"></span>${bidiSafe(q.rows[rk])}</div>
+          <div class="tf-pool-header"><span class="swatch"></span>${bidiSafe(tfLabel(q.rows, rk))}</div>
           <div class="tf-pool-chips">${remaining.map(c => chipHtml(c, i)).join('')}</div>
         </div>
       `;
@@ -1760,9 +2071,9 @@
 
     const gridCols = colKeys.length + 1;
     let gridHtml = `<div class="tf-cell corner"></div>`;
-    colKeys.forEach(ck => { gridHtml += `<div class="tf-cell colhead">${bidiSafe(q.cols[ck])}</div>`; });
+    colKeys.forEach(ck => { gridHtml += `<div class="tf-cell colhead">${bidiSafe(tfLabel(q.cols, ck))}</div>`; });
     rowKeys.forEach((rk, i) => {
-      gridHtml += `<div class="tf-cell rowhead tf-row-${i % 4}"><span class="swatch"></span>${bidiSafe(q.rows[rk])}</div>`;
+      gridHtml += `<div class="tf-cell rowhead tf-row-${i % 4}"><span class="swatch"></span>${bidiSafe(tfLabel(q.rows, rk))}</div>`;
       colKeys.forEach(ck => {
         const cellId = rk + '-' + ck;
         const chipId = tfChipInCell(cellId);
@@ -1783,6 +2094,7 @@
         <div class="qmeta">
           <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
+          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
         </div>
         <p class="qtext">${bidiSafe(q.question)}</p>
@@ -1867,19 +2179,40 @@
   // ---------------- Next question flow ----------------
   function goNext(){
     if(!(state.useBank || state.useGen)){
+      state.activeChain = null; updateChainBanner();
       qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות מקור שאלות אחד למעלה.</p></div>`;
       return;
     }
     if(state.qtypes.size === 0){
+      state.activeChain = null; updateChainBanner();
       qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות סוג שאלה אחד למעלה.</p></div>`;
       return;
     }
-    const q = pickNextQuestionFiltered();
-    if(!q){
-      qArea.innerHTML = `<div class="empty-state"><div class="big">😕</div><p>לא נמצאו שאלות בנושא/מקור/סוג שנבחרו. נסה להרחיב את הסינון.</p></div>`;
+
+    // A sequence already in progress takes precedence over the random picker, so
+    // its remaining steps are shown in order and can't be skipped or reordered.
+    if(chainHasMoreSteps() && chainShouldContinue()){
+      state.activeChain.index++;
+      renderQuestion(state.activeChain.list[state.activeChain.index]);
+      updateChainBanner();
+      scrollToQuestionTop();
       return;
     }
+    state.activeChain = null;
+
+    const q = pickNextQuestionFiltered();
+    if(!q){
+      updateChainBanner();
+      qArea.innerHTML = `<div class="empty-state"><div class="big">😕</div><p>לא נמצאו שאלות בנושא/מקור/סוג/מבנה שנבחרו. נסה להרחיב את הסינון.</p></div>`;
+      return;
+    }
+
+    // pickNextQuestionFiltered can only return a chain HEAD (chainableForPick), so
+    // entering a sequence always starts at step 1.
+    const list = chainOf(q);
+    state.activeChain = list ? { list, index: 0 } : null;
     renderQuestion(q);
+    updateChainBanner();
     scrollToQuestionTop();
   }
 
