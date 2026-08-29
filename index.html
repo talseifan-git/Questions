@@ -113,9 +113,18 @@
     user-select: none;
     transition: border-color .15s, background .15s;
   }
-  /* Six format toggles would each stretch to a full row at flex:1 1 200px, so give
-     this group a smaller basis — three across on desktop, two on a phone. */
-  .fmt-toggles .toggle{ flex: 1 1 150px; }
+  /* Every toggle group is laid out as a grid rather than left to flex-wrap, so
+     that no group can ever end on a ragged half-empty row (the six format
+     toggles used to wrap as five across plus one full-width card underneath).
+     Each column count below divides its group's item count exactly:
+       source 2 items -> 2 across;  qtype 3 items -> 3 across (1 on a phone);
+       format 6 items -> 3 across (2 on a phone).
+     NOTE: adding a toggle to any group means re-picking that group's column
+     count so it still divides the new number of items evenly. */
+  .src-toggles{ display:grid; grid-template-columns: repeat(2, 1fr); }
+  .qtype-toggles{ display:grid; grid-template-columns: repeat(3, 1fr); }
+  .fmt-toggles{ display:grid; grid-template-columns: repeat(3, 1fr); }
+  .source-toggles .toggle{ min-width:0; }
   .toggle input{ display:none; }
   .toggle .box{
     width:18px; height:18px; border-radius:5px;
@@ -512,6 +521,8 @@
   .tf-cell.slot.wrong-reveal{ background:#2a1719; }
 
   @media (max-width:520px){
+    .qtype-toggles{ grid-template-columns: repeat(1, 1fr); }
+    .fmt-toggles{ grid-template-columns: repeat(2, 1fr); }
     h1{ font-size:24px; }
     .qtext{ font-size:16.5px; }
     .qcard{ padding:18px 15px; }
@@ -536,7 +547,7 @@
 
   <div class="panel">
     <p class="panel-title">מקור השאלות</p>
-    <div class="source-toggles">
+    <div class="source-toggles src-toggles">
       <label class="toggle bank active" id="toggleBank">
         <input type="checkbox" checked>
         <span class="box"></span>
@@ -555,7 +566,7 @@
       </label>
     </div>
     <p class="panel-title">סוג שאלה</p>
-    <div class="source-toggles">
+    <div class="source-toggles qtype-toggles">
       <label class="toggle qtype active" id="toggleConcept">
         <input type="checkbox" checked>
         <span class="box"></span>
@@ -617,7 +628,7 @@
         <input type="checkbox" checked>
         <span class="box"></span>
         <span>
-          <div class="toggle-label">קיבוץ</div>
+          <div class="toggle-label">קיטלוג</div>
           <div class="toggle-sub">מיון פריטים לקטגוריות</div>
           <div class="toggle-count" id="countFmtGroup"></div>
         </span>
@@ -830,7 +841,7 @@
   //   single  סגורה     — one correct letter out of several
   //   multi   רב-ברירה  — a set of correct letters (q.multi === true)
   //   match   שידוך     — q.type === 'match'
-  //   group   קיבוץ     — q.type === 'group'
+  //   group   קיטלוג    — q.type === 'group'
   //   table   טבלה      — q.type === 'table-fill'
   //   chain   שרשרת     — q.chain is set: the question is one step of an ordered
   //                       sequence about a single evolving scenario
@@ -844,7 +855,7 @@
   // six counts add up to the total with no double counting.)
   const FORMAT_LABELS = {
     single: 'סגורה', multi: 'רב-ברירה', match: 'שידוך',
-    group: 'קיבוץ', table: 'טבלה', chain: 'שרשרת'
+    group: 'קיטלוג', table: 'טבלה', chain: 'שרשרת'
   };
   const FORMAT_KEYS = Object.keys(FORMAT_LABELS);
 
@@ -1875,7 +1886,7 @@
   }
 
   // ================================================================
-  // GROUP (קיבוץ)
+  // GROUP (קיטלוג)
   // ================================================================
   function renderGroupQuestion(q){
     state.groupCatKeys = Object.keys(q.categories);
