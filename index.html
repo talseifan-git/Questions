@@ -552,7 +552,7 @@
         <input type="checkbox" checked>
         <span class="box"></span>
         <span>
-          <div class="toggle-label">מהקובץ</div>
+          <div class="toggle-label">קבצים</div>
           <div class="toggle-sub" id="bankCount">— שאלות</div>
         </span>
       </label>
@@ -560,7 +560,7 @@
         <input type="checkbox" checked>
         <span class="box"></span>
         <span>
-          <div class="toggle-label">מהמצגת</div>
+          <div class="toggle-label">מצגות</div>
           <div class="toggle-sub" id="genCount">— קבועות + — תבניות</div>
         </span>
       </label>
@@ -978,52 +978,59 @@
     return q.qtype.includes(t);
   }
 
+  function qtypeAllowedForCount(q){
+    if(!q.qtype || !q.qtype.length) return true;
+    return q.qtype.some(t => state.qtypes.has(t));
+  }
+
   function updateCounts(){
     const topics = state.selectedTopics;
     const bankPool = bankPoolForTopic(topics);
     const conceptPool = genConceptPoolForTopic(topics);
     const templatePool = genTemplatePoolForTopic(topics);
 
-    document.getElementById('bankCount').textContent = `${bankPool.length} שאלות`;
-    // All spaces except the one after '+' are non-breaking (&nbsp;), so the
-    // <wbr> right after '+' is the ONLY point the browser is allowed to wrap
-    // at — otherwise it prefers breaking at whichever space best fills the
-    // line (e.g. after "תבניות"), which is what the previous version did.
-    document.getElementById('genCount').innerHTML = `${conceptPool.length}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templatePool.length}&nbsp;תבניות`;
+    // Faceted counts: every panel is constrained by all OTHER active axes.
+    // The panel's own axis is intentionally ignored while calculating each of
+    // its options, so an unchecked option still shows how many questions would
+    // become available if the user re-enabled it.
+    const bankVisibleByOtherAxes = bankPool.filter(q => qtypeAllowedForCount(q) && matchesFormat(q));
+    const genFixedVisibleByOtherAxes = conceptPool.filter(q => qtypeAllowedForCount(q) && matchesFormat(q));
+    const genTemplatesVisibleByOtherAxes = templatePool.filter(t => qtypeAllowedForCount(t) && formatAllowed(formatOfTemplate(t)));
 
-    // Per-qtype counts only include the sources that are actually enabled right
-    // now, so they show what the person would really get, not a theoretical max.
+    document.getElementById('bankCount').textContent = `${bankVisibleByOtherAxes.length} שאלות`;
+    document.getElementById('genCount').innerHTML = `${genFixedVisibleByOtherAxes.length}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${genTemplatesVisibleByOtherAxes.length}&nbsp;תבניות`;
+
+    // qtype counts are constrained by source + format + topic, but not by the
+    // currently selected qtypes themselves.
     const countEls = { concept: document.getElementById('countConcept'), numeric: document.getElementById('countNumeric'), scenario: document.getElementById('countScenario') };
     Object.keys(countEls).forEach(t => {
       let fixed = 0, templates = 0;
-      if(state.useBank) fixed += bankPool.filter(q => hasQtype(q, t)).length;
+      if(state.useBank) fixed += bankPool.filter(q => hasQtype(q, t) && matchesFormat(q)).length;
       if(state.useGen){
-        fixed += conceptPool.filter(q => hasQtype(q, t)).length;
-        templates += templatePool.filter(q => hasQtype(q, t)).length;
+        fixed += conceptPool.filter(q => hasQtype(q, t) && matchesFormat(q)).length;
+        templates += templatePool.filter(q => hasQtype(q, t) && formatAllowed(formatOfTemplate(q))).length;
       }
-      // Use innerHTML with a <wbr> right after the '+' (not a forced <br>) so the
-      // browser only breaks the line there if it genuinely doesn't fit on one —
-      // short combos ("12 שאלות + 3 תבניות") still render on a single line.
-      // All other spaces are &nbsp; so '+' stays the ONLY allowed break point
-      // (a plain space there would let the browser wrap after "תבניות" instead,
-      // which is the bug this fixes).
       countEls[t].innerHTML = templates > 0 ? `${fixed}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templates}&nbsp;תבניות` : `${fixed} שאלות`;
     });
 
-    // Per-format counts. Same rule as the qtype counts above: they reflect the topic
-    // filter and the enabled sources, but not the other two filter axes — so each
-    // panel shows what that panel alone controls.
+    // format counts are constrained by source + qtype + topic, but not by the
+    // currently selected formats themselves.
     const fmtFixed = {}, fmtTemplates = {};
     FORMAT_KEYS.forEach(f => { fmtFixed[f] = 0; fmtTemplates[f] = 0; });
-    if(state.useBank) bankPool.forEach(q => { fmtFixed[formatOf(q)]++; });
-    if(state.useGen){
-      conceptPool.forEach(q => { fmtFixed[formatOf(q)]++; });
-      templatePool.forEach(t => { fmtTemplates[formatOfTemplate(t)]++; });
+    const chainPools = [];
+    if(state.useBank){
+      const pool = bankPool.filter(q => qtypeAllowedForCount(q));
+      pool.forEach(q => { fmtFixed[formatOf(q)]++; });
+      chainPools.push(pool);
     }
-    // The chain count is reported in sequences as well as questions — "4 שאלות"
-    // is misleading for a format whose whole point is that the questions arrive
-    // together as one unit.
-    const chainSeqCount = countChainsIn(bankPool, conceptPool);
+    if(state.useGen){
+      const fixedPool = conceptPool.filter(q => qtypeAllowedForCount(q));
+      const templateCountPool = templatePool.filter(t => qtypeAllowedForCount(t));
+      fixedPool.forEach(q => { fmtFixed[formatOf(q)]++; });
+      templateCountPool.forEach(t => { fmtTemplates[formatOfTemplate(t)]++; });
+      chainPools.push(fixedPool);
+    }
+    const chainSeqCount = countChainsIn(...chainPools);
     FORMAT_KEYS.forEach(f => {
       const el = fmtCountEls[f];
       if(!el) return;
@@ -1088,6 +1095,7 @@
       if(state.qtypes.has(t) && state.qtypes.size === 1) return; // can't turn off the last one
       if(state.qtypes.has(t)) state.qtypes.delete(t); else state.qtypes.add(t);
       refreshQtypeToggleUI();
+      updateCounts();
     });
   });
   refreshQtypeToggleUI();
@@ -1326,18 +1334,28 @@
   // single selected section every question shares the same weight, so this
   // reduces to a plain uniform pick in that case — same result as before, just
   // without a separate branch for it.
-  function pickBankQuestion(){
-    const pool = bankQs.filter(q => state.selectedTopics.has(q.section) && chainableForPick(q) && matchesFormat(q));
+  function eligibleBankPool(){
+    return bankQs.filter(q => state.selectedTopics.has(q.section) && chainableForPick(q) && matchesQtype(q) && matchesFormat(q));
+  }
+
+  function eligibleGeneratedPools(){
+    return {
+      concept: genConcept.filter(q => sectionAllowed(q.section) && chainableForPick(q) && matchesQtype(q) && matchesFormat(q)),
+      templates: genTemplates.filter(t => sectionAllowed(t.section) && matchesQtype(t) && formatAllowed(formatOfTemplate(t)))
+    };
+  }
+
+  function pickBankQuestion(pool = eligibleBankPool()){
     if(pool.length === 0) return null;
     return weightedPick(pool, q => perQuestionWeight(q.section));
   }
 
-  function pickGeneratedQuestion(){
-    const conceptPool = genConcept.filter(q => sectionAllowed(q.section) && chainableForPick(q) && matchesFormat(q));
-    const templatePool = genTemplates.filter(t => sectionAllowed(t.section) && formatAllowed(formatOfTemplate(t)));
+  function pickGeneratedQuestion(pools = eligibleGeneratedPools()){
+    const conceptPool = pools.concept;
+    const templatePool = pools.templates;
     if(conceptPool.length === 0 && templatePool.length === 0) return null;
-    // mix concept questions (fixed) and template-generated (infinite), weighted
-    // 50/50 when both are available for the current filter, otherwise whichever exists
+    // mix fixed questions and templates 50/50 when both are available; every
+    // candidate in these pools already satisfies the full active filter.
     const useTemplate = templatePool.length > 0 && (conceptPool.length === 0 || Math.random() < 0.5);
     if(useTemplate){
       const t = templatePool[Math.floor(Math.random()*templatePool.length)];
@@ -1347,14 +1365,16 @@
   }
 
   function pickNextQuestion(){
-    let fromBank = state.useBank;
-    let fromGen = state.useGen;
-    if(fromBank && fromGen){
-      fromBank = Math.random() < 0.5;
-      fromGen = !fromBank;
+    const bankPool = state.useBank ? eligibleBankPool() : [];
+    const genPools = state.useGen ? eligibleGeneratedPools() : { concept: [], templates: [] };
+    const bankAvailable = bankPool.length > 0;
+    const genAvailable = genPools.concept.length > 0 || genPools.templates.length > 0;
+
+    if(bankAvailable && genAvailable){
+      return Math.random() < 0.5 ? pickBankQuestion(bankPool) : pickGeneratedQuestion(genPools);
     }
-    if(fromBank) return pickBankQuestion();
-    if(fromGen) return pickGeneratedQuestion();
+    if(bankAvailable) return pickBankQuestion(bankPool);
+    if(genAvailable) return pickGeneratedQuestion(genPools);
     return null;
   }
 
@@ -1419,7 +1439,7 @@
     let html = `
       <div class="qcard">
         <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
+          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
           <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
@@ -1755,7 +1775,7 @@
     qArea.innerHTML = `
       <div class="qcard">
         <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
+          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
           <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
@@ -1929,7 +1949,7 @@
     qArea.innerHTML = `
       <div class="qcard">
         <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
+          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
           <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
@@ -2103,7 +2123,7 @@
     qArea.innerHTML = `
       <div class="qcard">
         <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'מהקובץ' : 'מהמצגת'}</span>
+          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
           <span class="tag">${bidiSafe(q.section || '')}</span>
           <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
           ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
