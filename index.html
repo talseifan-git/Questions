@@ -30,7 +30,6 @@
     --amber: #f0a93a;
     --amber-dim: #5c451c;
     --blue: #7fb2e0;
-    --blue-dim: #1c2c3a;
     --rose: #d491a4;      /* smoky pink — the מבנה שאלה accent */
     --rose-dim: #3a2630;
     --teal: #4fc9c4;
@@ -55,14 +54,6 @@
 
   /* ---------- Header ---------- */
   header{ padding: 28px 4px 18px; }
-  .eyebrow{
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: .12em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
   h1{
     font-size: 30px;
     font-weight: 800;
@@ -101,7 +92,7 @@
     color: var(--muted-2);
     margin: 0 0 12px;
   }
-  .source-toggles{ display:flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .toggle-grid{ display:flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
   .toggle{
     flex: 1 1 200px;
     display:flex; align-items:center; gap:10px;
@@ -117,14 +108,13 @@
      that no group can ever end on a ragged half-empty row (the six format
      toggles used to wrap as five across plus one full-width card underneath).
      Each column count below divides its group's item count exactly:
-       source 2 items -> 2 across;  qtype 3 items -> 3 across (1 on a phone);
+       qtype 3 items -> 3 across (1 on a phone);
        format 6 items -> 3 across (2 on a phone).
      NOTE: adding a toggle to any group means re-picking that group's column
      count so it still divides the new number of items evenly. */
-  .src-toggles{ display:grid; grid-template-columns: repeat(2, 1fr); }
   .qtype-toggles{ display:grid; grid-template-columns: repeat(3, 1fr); }
   .fmt-toggles{ display:grid; grid-template-columns: repeat(3, 1fr); }
-  .source-toggles .toggle{ min-width:0; }
+  .toggle-grid .toggle{ min-width:0; }
   .toggle input{ display:none; }
   .toggle .box{
     width:18px; height:18px; border-radius:5px;
@@ -136,23 +126,10 @@
   .toggle-label{ font-weight:600; font-size:14.5px; }
   .toggle-sub{ font-size:12px; color: var(--muted); margin-top:1px; }
   .toggle-count{ font-family: var(--mono); font-size:11px; color: var(--muted); margin-top:4px; line-height:1.5; }
-  /* Chain count: keep the original inline appearance, but make the separator
-     belong to the first part. If wrapping is necessary, the break therefore happens
-     after the separator, never in the middle of a number/label. */
-  .chain-count-part{ white-space:nowrap; }
-  .chain-count-separator{ white-space:nowrap; }
-  .toggle.disabled{ opacity:.45; cursor:not-allowed; }
 
-  /* Source toggles (bank vs. generated) share one accent (blue) — same as each
-     other, different from the qtype accent below — so the panel reads as one
-     consistent "source" group, distinct from the "type" group underneath it. */
-  .toggle.bank.active, .toggle.gen.active{ border-color: var(--blue); background: var(--blue-dim); }
-  .toggle.bank.active .box, .toggle.gen.active .box{ background: var(--blue); border-color: var(--blue); }
-  .toggle.bank.active .box::after, .toggle.gen.active .box::after{ color:#0f1318; }
-
-  /* Question-type toggles share one distinct accent (teal), deliberately
-     different from the source toggles above, so the two panels read as two
-     different kinds of filter rather than one long list of identical chips. */
+  /* Question-type toggles (סוג שאלה) share one accent (teal); the structure
+     toggles below use another (rose), so the two panels read as two different
+     kinds of filter rather than one long list of identical chips. */
   .toggle.qtype.active{ border-color: var(--teal); background: var(--teal-dim); }
   .toggle.qtype.active .box{ background: var(--teal); border-color: var(--teal); }
   .toggle.qtype.active .box::after{ color:#0f1318; }
@@ -294,17 +271,15 @@
     padding: 4px 9px; border-radius: 20px; border: 1px solid var(--line);
     color: #cfd6de;
   }
-  .tag.bank{ border-color:#3a5a7a; color:#7fb2e0; }
-  .tag.generated{ border-color:#5a3a7a; color:#c199e8; }
-  .tag.qid{ color: var(--muted-2); border-color: var(--line); font-weight:500; }
-  /* Three tags, three accents, so the strip is readable at a glance:
-     source = blue/purple (.tag.bank / .tag.generated), topic = neutral grey
-     (the base .tag), format = smoky pink (--rose). The format badge, the
-     מבנה שאלה filter panel and the chain banner all share --rose, so the
-     filter you flipped and the label on what you got read as one thing.
+  /* Tag strip on the question card, right to left: type = teal (.qt), structure =
+     smoky pink (.fmt), topic = neutral grey (the base .tag). Each tag's colour
+     matches its filter panel (the structure panel and the chain banner share
+     --rose), so the filter you flipped and the label on what you got read as one thing.
      Note the ☑/🔗/🗂️/🧩 instruction lines under the question text stay amber:
      they are per-question instructions, not the format filter's accent. */
   .tag.fmt{ border-color: var(--rose); color: var(--rose); }
+  .tag.qt{ border-color: var(--teal); color: var(--teal); }
+  .topic-count{ color: var(--muted); font-family: var(--mono); font-size: 12px; margin-inline-start: 6px; }
   .qtext{ font-size: 18.5px; font-weight: 600; margin: 0 0 20px; line-height:1.55; white-space: pre-wrap; }
   .multi-instruction{
     font-size: 13.5px; color: var(--amber); font-weight:700; margin: -12px 0 16px;
@@ -448,7 +423,6 @@
     flex: 1 1 220px; border: 1.5px solid var(--line); border-radius: 12px;
     padding: 14px; cursor:pointer; transition: border-color .12s;
   }
-  .group-bucket.drop-target{ border-color: var(--blue); background:#141c26; }
   .bucket-header{
     display:flex; align-items:center; gap:10px; margin-bottom:12px;
     padding-bottom:10px; border-bottom: 1.5px solid var(--line);
@@ -542,7 +516,6 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">מד"א</div>
     <h1>שאלות תרגול</h1>
     <p class="subtitle">רץ מקומית, בלי אינטרנט.</p>
     <svg class="ecg" viewBox="0 0 400 34" preserveAspectRatio="none">
@@ -551,27 +524,8 @@
   </header>
 
   <div class="panel">
-    <p class="panel-title">מקור השאלות</p>
-    <div class="source-toggles src-toggles">
-      <label class="toggle bank active" id="toggleBank">
-        <input type="checkbox" checked>
-        <span class="box"></span>
-        <span>
-          <div class="toggle-label">קבצים</div>
-          <div class="toggle-sub" id="bankCount">— שאלות</div>
-        </span>
-      </label>
-      <label class="toggle gen active" id="toggleGen">
-        <input type="checkbox" checked>
-        <span class="box"></span>
-        <span>
-          <div class="toggle-label">מצגות</div>
-          <div class="toggle-sub" id="genCount">— קבועות + — תבניות</div>
-        </span>
-      </label>
-    </div>
     <p class="panel-title">סוג שאלה</p>
-    <div class="source-toggles qtype-toggles">
+    <div class="toggle-grid qtype-toggles">
       <label class="toggle qtype active" id="toggleConcept">
         <input type="checkbox" checked>
         <span class="box"></span>
@@ -601,7 +555,7 @@
       </label>
     </div>
     <p class="panel-title">מבנה שאלה</p>
-    <div class="source-toggles fmt-toggles">
+    <div class="toggle-grid fmt-toggles">
       <label class="toggle fmt active" id="toggleFmtSingle">
         <input type="checkbox" checked>
         <span class="box"></span>
@@ -695,27 +649,26 @@
   </div>
 
   <footer>
-    כל הזכויות שמורות למגן דוד אדום בישראל — כלי עזר לתרגול, לא תחליף לחומר הקורס הרשמי.
+    <div>מבוסס על ספרי מגן דוד אדום בישראל — כלי עזר לתרגול, לא תחליף לקורס רשמי.</div>
+    <div>נשאל, נענה והוסבר ע"י AI — הערות? טעויות? <bdi>tal.seifan+MDA@mail.huji.ac.il</bdi>.</div>
   </footer>
 </div>
 
-<script src="question_bank.js"></script>
-<script src="generated_content.js"></script>
+<script src="questions.js"></script>
+<script src="templates.js"></script>
 <script>
 (function(){
   "use strict";
 
   // ---------------- State ----------------
   const state = {
-    useBank: true,
-    useGen: true,
     qtypes: new Set(['concept', 'numeric', 'scenario']), // all on by default
     // Structural format of the question — a separate axis from qtype above.
     // qtype says what the question is ABOUT (concept / numeric / scenario);
     // formats says how it is ANSWERED. See formatOf() further down.
     formats: new Set(['single', 'multi', 'match', 'group', 'table', 'chain']),
     // Selected topic sections. Populated in buildTopicList() below, right after
-    // load, with every section in bankSections — i.e. the default is "all topics",
+    // load, with every section in topicSections — i.e. the default is "all topics",
     // represented as the full set rather than a separate 'all' sentinel. Filtering
     // code below just checks set-membership, so "all selected" behaves identically
     // to the old topic==='all' branch without needing to special-case it.
@@ -723,6 +676,7 @@
     current: null,       // current question object
     attempt: 0,          // 0 = not answered yet, 1 = one wrong try used
     wrongLetters: new Set(),     // single-select: ruled-out letters this attempt
+    selectedLetter: null,        // single-select: letter picked but not yet checked
     selectedLetters: new Set(),  // multi-select: currently checked letters
     answered: false,
     stats: { first: 0, second: 0, missed: 0 }, // always starts at zero on load — no cross-session persistence
@@ -742,9 +696,9 @@
   // How many most-recently-asked questions to avoid repeating.
   const NO_REPEAT_WINDOW = 20;
 
-  // Dedup key for a question: bank/concept questions have a stable id, but
+  // Dedup key for a question: fixed questions have a stable id, but
   // template-generated numeric questions get a fresh random id every time
-  // .generate() runs (see generated_content.js), so an id-based check would
+  // .generate() runs (see templates.js), so an id-based check would
   // never catch "the same template came up again with different numbers".
   // Use the template key instead for those.
   function questionKey(q){
@@ -757,7 +711,7 @@
   }
 
   // Ranked priority order (1 = highest) for the sections that actually exist in
-  // question_bank.js today. Used for: weighting random selection under "all topics",
+  // questions.js today. Used for: weighting random selection under "all topics",
   // and ordering the topic dropdown. (A section not listed here still works fully —
   // buildTopicList appends it after the ranked ones, and priorityWeight falls back
   // to the lowest weight for it — but it won't get intentional priority placement
@@ -774,7 +728,7 @@
     'עבודת הצוות',
     'קבלת החלטות ודיווחים',
     'מענה מד"א בשעת חירום',
-    'אג"ם ונהלים'   // NOTE: must match question_bank.js exactly (ם sofit, not מ) —
+    'אג"ם ונהלים'   // NOTE: must match questions.js exactly (ם sofit, not מ) —
                     // a mismatch here silently drops the section to the bottom of the
                     // topic list and to the lowest random-selection weight.
   ];
@@ -784,8 +738,6 @@
     if(rank === -1) return 1; // unknown section (shouldn't happen) falls back to lowest weight
     return PRIORITY_ORDER.length - rank;
   }
-
-  function saveStats(){ /* stats are session-only by design; nothing to persist */ }
 
   // ---------------- DOM refs ----------------
   const qArea = document.getElementById('qArea');
@@ -799,8 +751,6 @@
   const topicSelectAllBtn = document.getElementById('topicSelectAllBtn');
   const topicClearBtn = document.getElementById('topicClearBtn');
   const topicCloseBtn = document.getElementById('topicCloseBtn');
-  const toggleBank = document.getElementById('toggleBank');
-  const toggleGen = document.getElementById('toggleGen');
   const toggleConcept = document.getElementById('toggleConcept');
   const toggleNumeric = document.getElementById('toggleNumeric');
   const toggleScenario = document.getElementById('toggleScenario');
@@ -821,19 +771,23 @@
     chain:  document.getElementById('countFmtChain')
   };
 
-  // ---------------- Setup source toggles ----------------
-  const bankQs = (window.QUESTION_BANK || []);
-  const genConcept = (window.GENERATED_CONCEPT_QUESTIONS || []);
-  const genTemplates = (window.GENERATED_TEMPLATES || []);
+  // ---------------- Question data ----------------
+  // The fixed questions (questions.js, ids QB_/GC_) plus the numeric templates
+  // (templates.js), which generate a fresh randomized question on every .generate() call.
+  const fixedQs = (window.QUESTIONS || []);
+  const genTemplates = (window.QUESTION_TEMPLATES || []);
 
-  // The set of sections that actually exist in question_bank.js — this is the
+  // Chance that a draw goes to a numeric template (GCT_):
+  //   - no template matches the current filters → 0;
+  //   - otherwise the templates' relative share of the eligible pool
+  //     (templates / (templates + fixed questions)), but never below
+  //     TEMPLATE_MIN_SHARE.
+  const TEMPLATE_MIN_SHARE = 0.10;
+
+  // The set of sections that actually exist in questions.js — this is the
   // single source of truth for "what topics exist". The topic dropdown is built
-  // from exactly this set, and generated-content questions/templates whose section
-  // isn't in this set are never shown, in either a specific-topic filter or "all"
-  // (some generated questions use sections outside this set, e.g. legal/ethics or
-  // documentation topics with no clinical-topic equivalent in the bank — those stay
-  // reachable only if the bank itself grows a matching section).
-  const bankSections = new Set(bankQs.map(q => q.section));
+  // from exactly this set; a template whose section isn't in it is never shown.
+  const topicSections = new Set(fixedQs.map(q => q.section));
   function sectionAllowed(section){
     return state.selectedTopics.has(section);
   }
@@ -863,6 +817,7 @@
     group: 'קיטלוג', table: 'טבלה', chain: 'שרשרת'
   };
   const FORMAT_KEYS = Object.keys(FORMAT_LABELS);
+  const QTYPE_LABELS = { concept: 'מושג', numeric: 'מספר וחישוב', scenario: 'תרחיש' };
 
   function formatOf(q){
     if(!q) return 'single';
@@ -873,7 +828,7 @@
     return q.multi ? 'multi' : 'single';
   }
   // Templates describe a question they haven't generated yet, so their format has to
-  // be read off the template object. Every template in generated_content.js today
+  // be read off the template object. Every template in templates.js today
   // produces a single-select numeric question; an explicit "format" field on the
   // template overrides that if one is ever added that doesn't.
   function formatOfTemplate(t){
@@ -902,14 +857,14 @@
   //   (1) only step 1 is reachable by random selection (see chainableForPick below),
   //       so a sequence can only ever be ENTERED at its head;
   //   (2) once entered, goNext() walks the remaining steps in order, bypassing the
-  //       random picker, the no-repeat window and the source/type/topic filters —
+  //       random picker, the no-repeat window and the type/structure/topic filters —
   //       otherwise a filter change mid-sequence could strand the person halfway.
   //
   // Because of (1), the qtype tags on step 1 are what decide whether the whole
   // sequence is reachable at all: tag every step of a chain identically (and give
   // them all the same section) unless you specifically want otherwise.
   const chains = {};
-  [...bankQs, ...genConcept].forEach(q => {
+  fixedQs.forEach(q => {
     if(!q || !q.chain) return;
     (chains[q.chain] = chains[q.chain] || []).push(q);
   });
@@ -944,32 +899,29 @@
     return !!(c && c.index < c.list.length - 1);
   }
 
-  // Precompute how many bank questions exist per section, so each question's individual
+  // Precompute how many fixed questions exist per section, so each question's individual
   // weight can be normalized by its section's size. Without this, a huge lower-priority
   // section (e.g. 112 questions) would still get drawn more often in total than a small
   // higher-priority section (e.g. 10 questions), even though the section ranks lower —
   // because weight was being applied per-question rather than per-topic.
   const sectionQuestionCounts = {};
-  bankQs.forEach(q => { sectionQuestionCounts[q.section] = (sectionQuestionCounts[q.section] || 0) + 1; });
+  fixedQs.forEach(q => { sectionQuestionCounts[q.section] = (sectionQuestionCounts[q.section] || 0) + 1; });
   function perQuestionWeight(section){
     const count = sectionQuestionCounts[section] || 1;
     return priorityWeight(section) / count;
   }
 
 
-  // ---------------- Question counts (source panel + qtype panel) ----------------
+  // ---------------- Question counts (type panel, structure panel, topic list) ----------------
   // All of these depend on the selected topic, and re-run whenever the topic
-  // or the source toggles change, so the numbers shown always reflect what's
+  // or the type/structure toggles change, so the numbers shown always reflect what's
   // actually reachable under the current filter combination.
 
   // topics is a Set of selected section names (same shape as state.selectedTopics).
   // Passed explicitly rather than read from state so these stay reusable for an
   // arbitrary topic set, same as before.
-  function bankPoolForTopic(topics){
-    return bankQs.filter(q => topics.has(q.section));
-  }
-  function genConceptPoolForTopic(topics){
-    return genConcept.filter(q => topics.has(q.section));
+  function fixedPoolForTopic(topics){
+    return fixedQs.filter(q => topics.has(q.section));
   }
   function genTemplatePoolForTopic(topics){
     return genTemplates.filter(t => topics.has(t.section));
@@ -983,66 +935,58 @@
     return q.qtype.includes(t);
   }
 
-  function qtypeAllowedForCount(q){
-    if(!q.qtype || !q.qtype.length) return true;
-    return q.qtype.some(t => state.qtypes.has(t));
+  // Per-topic question count shown in the topic dropdown. Independent of which topics
+  // are ticked (every row shows its own total) but follows the type and structure
+  // toggles. Chain steps are counted individually, like the structure-panel counts;
+  // each numeric template counts as one.
+  const topicCountEls = {}; // section -> <bdi> filled in by buildTopicList()
+  let topicUIReady = false; // true once the topic list/state exist (set at init, below)
+  let topicTotalCount = 0;  // questions in the currently SELECTED topics under the type/structure toggles
+  function updateTopicCounts(){
+    const n = {};
+    fixedQs.forEach(q => { if(matchesQtype(q) && matchesFormat(q)) n[q.section] = (n[q.section] || 0) + 1; });
+    genTemplates.forEach(t => { if(matchesQtype(t) && formatAllowed(formatOfTemplate(t))) n[t.section] = (n[t.section] || 0) + 1; });
+    Object.keys(topicCountEls).forEach(sec => { topicCountEls[sec].textContent = `(${n[sec] || 0})`; });
+    topicTotalCount = 0;
+    state.selectedTopics.forEach(sec => { topicTotalCount += n[sec] || 0; });
+    if(topicUIReady) renderTopicLabel(); // closed-trigger label shows the same total
   }
 
   function updateCounts(){
+    updateTopicCounts();
     const topics = state.selectedTopics;
-    const bankPool = bankPoolForTopic(topics);
-    const conceptPool = genConceptPoolForTopic(topics);
+    const fixedPool = fixedPoolForTopic(topics);
     const templatePool = genTemplatePoolForTopic(topics);
 
-    // Faceted counts: every panel is constrained by all OTHER active axes.
-    // The panel's own axis is intentionally ignored while calculating each of
-    // its options, so an unchecked option still shows how many questions would
-    // become available if the user re-enabled it.
-    const bankVisibleByOtherAxes = bankPool.filter(q => qtypeAllowedForCount(q) && matchesFormat(q));
-    const genFixedVisibleByOtherAxes = conceptPool.filter(q => qtypeAllowedForCount(q) && matchesFormat(q));
-    const genTemplatesVisibleByOtherAxes = templatePool.filter(t => qtypeAllowedForCount(t) && formatAllowed(formatOfTemplate(t)));
-
-    document.getElementById('bankCount').textContent = `${bankVisibleByOtherAxes.length} שאלות`;
-    document.getElementById('genCount').innerHTML = `${genFixedVisibleByOtherAxes.length}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${genTemplatesVisibleByOtherAxes.length}&nbsp;תבניות`;
-
-    // qtype counts are constrained by source + format + topic, but not by the
-    // currently selected qtypes themselves.
     const countEls = { concept: document.getElementById('countConcept'), numeric: document.getElementById('countNumeric'), scenario: document.getElementById('countScenario') };
     Object.keys(countEls).forEach(t => {
-      let fixed = 0, templates = 0;
-      if(state.useBank) fixed += bankPool.filter(q => hasQtype(q, t) && matchesFormat(q)).length;
-      if(state.useGen){
-        fixed += conceptPool.filter(q => hasQtype(q, t) && matchesFormat(q)).length;
-        templates += templatePool.filter(q => hasQtype(q, t) && formatAllowed(formatOfTemplate(q))).length;
-      }
+      const fixed = fixedPool.filter(q => hasQtype(q, t)).length;
+      const templates = templatePool.filter(q => hasQtype(q, t)).length;
+      // Use innerHTML with a <wbr> right after the '+' (not a forced <br>) so the
+      // browser only breaks the line there if it genuinely doesn't fit on one —
+      // short combos ("12 שאלות + 3 תבניות") still render on a single line.
+      // All other spaces are &nbsp; so '+' stays the ONLY allowed break point.
       countEls[t].innerHTML = templates > 0 ? `${fixed}&nbsp;קבועות&nbsp;+<wbr>&nbsp;${templates}&nbsp;תבניות` : `${fixed} שאלות`;
     });
 
-    // format counts are constrained by source + qtype + topic, but not by the
-    // currently selected formats themselves.
+    // Per-format counts. Same rule as the qtype counts above: they reflect the topic
+    // filter only, not the other panel's toggles — so each panel shows what that panel
+    // alone controls.
     const fmtFixed = {}, fmtTemplates = {};
     FORMAT_KEYS.forEach(f => { fmtFixed[f] = 0; fmtTemplates[f] = 0; });
-    const chainPools = [];
-    if(state.useBank){
-      const pool = bankPool.filter(q => qtypeAllowedForCount(q));
-      pool.forEach(q => { fmtFixed[formatOf(q)]++; });
-      chainPools.push(pool);
-    }
-    if(state.useGen){
-      const fixedPool = conceptPool.filter(q => qtypeAllowedForCount(q));
-      const templateCountPool = templatePool.filter(t => qtypeAllowedForCount(t));
-      fixedPool.forEach(q => { fmtFixed[formatOf(q)]++; });
-      templateCountPool.forEach(t => { fmtTemplates[formatOfTemplate(t)]++; });
-      chainPools.push(fixedPool);
-    }
-    const chainSeqCount = countChainsIn(...chainPools);
+    fixedPool.forEach(q => { fmtFixed[formatOf(q)]++; });
+    templatePool.forEach(t => { fmtTemplates[formatOfTemplate(t)]++; });
+    // The chain count is reported in sequences as well as questions — "4 שאלות"
+    // is misleading for a format whose whole point is that the questions arrive
+    // together as one unit.
+    const chainSeqCount = countChainsIn(fixedPool);
     FORMAT_KEYS.forEach(f => {
       const el = fmtCountEls[f];
       if(!el) return;
       if(f === 'chain'){
-        el.innerHTML = chainSeqCount === 0
+        el.textContent = chainSeqCount === 0
           ? 'אין רצפים'
-          : `<span class="chain-count-part">${chainSeqCount} רצפים<span class="chain-count-separator"> ·</span></span><wbr><span class="chain-count-part">${fmtFixed.chain} שאלות</span>`;
+          : `${chainSeqCount} רצפים · ${fmtFixed.chain} שאלות`;
         return;
       }
       el.innerHTML = fmtTemplates[f] > 0
@@ -1051,39 +995,15 @@
     });
   }
 
-  // How many distinct sequences are represented in the given pools. Counted by
+  // How many distinct sequences are represented in the pool. Counted by
   // chain id rather than by question, so a 4-step sequence counts once.
-  function countChainsIn(){
+  function countChainsIn(pool){
     const seen = new Set();
-    for(const pool of arguments){
-      if(!pool) continue;
-      pool.forEach(q => { if(q.chain) seen.add(q.chain); });
-    }
+    pool.forEach(q => { if(q.chain) seen.add(q.chain); });
     return seen.size;
   }
 
-  function refreshToggleUI(){
-    toggleBank.classList.toggle('active', state.useBank);
-    toggleGen.classList.toggle('active', state.useGen);
-    toggleBank.querySelector('input').checked = state.useBank;
-    toggleGen.querySelector('input').checked = state.useGen;
-    // Prevent both being off
-    nextBtn.disabled = !(state.useBank || state.useGen);
-    updateCounts();
-  }
-  toggleBank.addEventListener('click', (e)=>{
-    e.preventDefault();
-    if(state.useBank && !state.useGen) return; // can't turn off last one
-    state.useBank = !state.useBank;
-    refreshToggleUI();
-  });
-  toggleGen.addEventListener('click', (e)=>{
-    e.preventDefault();
-    if(state.useGen && !state.useBank) return;
-    state.useGen = !state.useGen;
-    refreshToggleUI();
-  });
-  refreshToggleUI();
+  updateCounts();
 
   // ---------------- Setup qtype toggles (concept/numeric/scenario — any combo of 1-3) ----------------
   const qtypeToggles = { concept: toggleConcept, numeric: toggleNumeric, scenario: toggleScenario };
@@ -1093,6 +1013,7 @@
       qtypeToggles[t].classList.toggle('active', active);
       qtypeToggles[t].querySelector('input').checked = active;
     });
+    updateCounts();
   }
   Object.keys(qtypeToggles).forEach(t => {
     qtypeToggles[t].addEventListener('click', (e) => {
@@ -1100,7 +1021,6 @@
       if(state.qtypes.has(t) && state.qtypes.size === 1) return; // can't turn off the last one
       if(state.qtypes.has(t)) state.qtypes.delete(t); else state.qtypes.add(t);
       refreshQtypeToggleUI();
-      updateCounts();
     });
   });
   refreshQtypeToggleUI();
@@ -1126,11 +1046,11 @@
 
   // ---------------- Topic filter (multi-select) ----------------
   // Ranked order for display: full priority order first, then anything unranked
-  // (shouldn't normally happen — would mean question_bank.js has a section not
+  // (shouldn't normally happen — would mean questions.js has a section not
   // listed in PRIORITY_ORDER above). Computed once; the set of sections is fixed
   // for the life of the page.
   const orderedSections = (() => {
-    const arr = Array.from(bankSections);
+    const arr = Array.from(topicSections);
     const prio = PRIORITY_ORDER.filter(s => arr.includes(s));
     const rest = arr.filter(s => !PRIORITY_ORDER.includes(s));
     return [...prio, ...rest];
@@ -1153,9 +1073,16 @@
       const txt = document.createElement('span');
       txt.textContent = section;
 
+      // "(N)": how many questions the topic holds under the current type + structure
+      // toggles. Kept current by updateTopicCounts().
+      const cnt = document.createElement('bdi');
+      cnt.className = 'topic-count';
+      topicCountEls[section] = cnt;
+
       row.appendChild(cb);
       row.appendChild(box);
       row.appendChild(txt);
+      row.appendChild(cnt);
       topicList.appendChild(row);
 
       cb.addEventListener('change', () => {
@@ -1245,18 +1172,25 @@
     return truncateToWidth(chosen[0], maxWidth, ' ...');
   }
 
-  // Updates the closed-trigger label and the "סגור" button's enabled state,
-  // then re-runs the count panels (they depend on the topic filter too).
-  function refreshTopicUI(){
+  // Closed-trigger label: which topics are selected, then "(N)" = how many questions
+  // they hold under the current type + structure toggles ("הכל (1965)" by default).
+  // The count is always kept whole: the topic names are truncated to leave room for it.
+  function renderTopicLabel(){
     if(state.selectedTopics.size === orderedSections.length){
-      topicTriggerLabel.textContent = 'הכל';
+      topicTriggerLabel.textContent = `הכל (${topicTotalCount})`;
     } else if(state.selectedTopics.size === 0){
       topicTriggerLabel.textContent = 'לא נבחר נושא';
     } else {
       const chosen = orderedSections.filter(s => state.selectedTopics.has(s));
-      const maxWidth = topicTriggerLabel.clientWidth;
-      topicTriggerLabel.textContent = computeTopicLabel(chosen, maxWidth);
+      const suffix = ` (${topicTotalCount})`;
+      const maxWidth = topicTriggerLabel.clientWidth - measureTopicText(suffix);
+      topicTriggerLabel.textContent = computeTopicLabel(chosen, maxWidth) + suffix;
     }
+  }
+
+  // Updates the "סגור" button's enabled state and re-runs the count panels
+  // (which also refresh the closed-trigger label, since the counts depend on the topic filter).
+  function refreshTopicUI(){
     // Can't close with nothing selected — that would leave the quiz with no
     // reachable questions and no visible way to fix it without reopening.
     topicCloseBtn.disabled = state.selectedTopics.size === 0;
@@ -1314,6 +1248,7 @@
   buildTopicList();
   state.selectedTopics = new Set(orderedSections); // default: all topics selected
   syncTopicCheckboxes();
+  topicUIReady = true;
   refreshTopicUI();
 
   // ---------------- Question selection ----------------
@@ -1328,59 +1263,116 @@
     return arr[arr.length-1];
   }
 
-  // Topic filtering here is always exact-match against a real bank section (see
-  // sectionAllowed above) — no substring matching and no "filter came up empty,
-  // silently ignore it and show something else anyway" fallback. If a filter
-  // combination genuinely has no matching questions, pickNextQuestionFiltered
-  // returns null and the caller shows the "no questions found, try widening the
-  // filter" empty state — that's a more honest result than quietly serving an
-  // off-topic question instead.
-  // Always weighted-pick, regardless of how many topics are selected: within a
-  // single selected section every question shares the same weight, so this
-  // reduces to a plain uniform pick in that case — same result as before, just
-  // without a separate branch for it.
-  function eligibleBankPool(){
-    return bankQs.filter(q => state.selectedTopics.has(q.section) && chainableForPick(q) && matchesQtype(q) && matchesFormat(q));
-  }
+  // ---- Balanced sampling by type (סוג) and structure (מבנה) ----
+  // Both axes are controlled the same way, over the pool that survives ALL filters
+  // (topic, type, structure; chain steps other than step 1 are not in the pool):
+  //   share(k)  = fraction of the pool that belongs to k;
+  //   target(k) = share(k), but never below the axis floor (10% type / 5% structure),
+  //               with the extra mass taken proportionally from the larger ones —
+  //               so no value is ever drawn MORE often than its share, except
+  //               that floor top-up for tiny ones;
+  //   share = 0 -> target 0 (a value with nothing in the pool is never drawn).
+  // Each pool item gets a weight, and the weights are iteratively rescaled
+  // (raking / iterative proportional fitting) until both marginals hit their targets.
+  // The seed weights keep the topic-priority weighting and the numeric templates'
+  // minimum share, so those behave as before.
+  const QTYPE_MIN_SHARE = 0.10;
+  const FORMAT_MIN_SHARE = 0.05;
 
-  function eligibleGeneratedPools(){
-    return {
-      concept: genConcept.filter(q => sectionAllowed(q.section) && chainableForPick(q) && matchesQtype(q) && matchesFormat(q)),
-      templates: genTemplates.filter(t => sectionAllowed(t.section) && matchesQtype(t) && formatAllowed(formatOfTemplate(t)))
-    };
-  }
-
-  function pickBankQuestion(pool = eligibleBankPool()){
-    if(pool.length === 0) return null;
-    return weightedPick(pool, q => perQuestionWeight(q.section));
-  }
-
-  function pickGeneratedQuestion(pools = eligibleGeneratedPools()){
-    const conceptPool = pools.concept;
-    const templatePool = pools.templates;
-    if(conceptPool.length === 0 && templatePool.length === 0) return null;
-    // mix fixed questions and templates 50/50 when both are available; every
-    // candidate in these pools already satisfies the full active filter.
-    const useTemplate = templatePool.length > 0 && (conceptPool.length === 0 || Math.random() < 0.5);
-    if(useTemplate){
-      const t = templatePool[Math.floor(Math.random()*templatePool.length)];
-      return t.generate();
+  function targetShares(shares, floor){
+    const keys = Object.keys(shares).filter(k => shares[k] > 0);
+    const out = {};
+    if(keys.length === 0) return out;
+    if(floor * keys.length >= 1){ keys.forEach(k => out[k] = 1 / keys.length); return out; }
+    const free = new Set(keys);
+    let rem = 1;
+    for(;;){
+      const sum = [...free].reduce((a, k) => a + shares[k], 0);
+      // lift the single most-underweight value to the floor, then recompute
+      let worst = null;
+      free.forEach(k => {
+        const t = rem * shares[k] / sum;
+        if(t < floor && (worst === null || shares[k] < shares[worst])) worst = k;
+      });
+      if(worst === null){ free.forEach(k => { out[k] = rem * shares[k] / sum; }); break; }
+      out[worst] = floor; rem -= floor; free.delete(worst);
+      if(free.size === 0) break;
     }
-    return conceptPool[Math.floor(Math.random()*conceptPool.length)];
+    return out;
   }
 
+  // An item's active type tags (untagged counts toward every active type, same
+  // rule as matchesQtype/hasQtype).
+  function activeTypesOf(q){
+    const tags = (q.qtype && q.qtype.length) ? q.qtype.filter(t => state.qtypes.has(t)) : Array.from(state.qtypes);
+    return tags.length ? tags : Array.from(state.qtypes);
+  }
+
+  function buildSamplingPool(){
+    const items = [];
+    fixedQs.forEach(q => {
+      if(sectionAllowed(q.section) && chainableForPick(q) && matchesFormat(q) && matchesQtype(q))
+        items.push({ q, isTemplate: false, fmt: formatOf(q), types: activeTypesOf(q), w: 0 });
+    });
+    genTemplates.forEach(t => {
+      if(sectionAllowed(t.section) && formatAllowed(formatOfTemplate(t)) && matchesQtype(t))
+        items.push({ q: t, isTemplate: true, fmt: formatOfTemplate(t), types: activeTypesOf(t), w: 0 });
+    });
+    if(items.length === 0) return null;
+
+    // seed weights
+    const fixedItems = items.filter(i => !i.isTemplate), tmplItems = items.filter(i => i.isTemplate);
+    const ts = tmplItems.length === 0 ? 0 :
+      Math.max(tmplItems.length / items.length, TEMPLATE_MIN_SHARE);
+    const fixedTotal = fixedItems.reduce((a, i) => a + perQuestionWeight(i.q.section), 0);
+    fixedItems.forEach(i => { i.w = (1 - ts) * perQuestionWeight(i.q.section) / (fixedTotal || 1); });
+    tmplItems.forEach(i => { i.w = ts / tmplItems.length; });
+    if(fixedItems.length === 0) tmplItems.forEach(i => { i.w = 1 / tmplItems.length; });
+
+    // shares (fractional membership for multi-tag items) and floored targets
+    const tShare = {}, fShare = {};
+    items.forEach(i => {
+      i.types.forEach(t => { tShare[t] = (tShare[t] || 0) + 1 / i.types.length; });
+      fShare[i.fmt] = (fShare[i.fmt] || 0) + 1;
+    });
+    const tTarget = targetShares(tShare, QTYPE_MIN_SHARE);
+    const fTarget = targetShares(fShare, FORMAT_MIN_SHARE);
+
+    // rake
+    for(let it = 0; it < 40; it++){
+      const tMass = {}, fMass = {};
+      let tot = 0;
+      items.forEach(i => { tot += i.w; });
+      items.forEach(i => { i.w /= tot; });
+      items.forEach(i => { i.types.forEach(t => { tMass[t] = (tMass[t] || 0) + i.w / i.types.length; }); });
+      items.forEach(i => { i.w *= i.types.reduce((a, t) => a + (tTarget[t] || 0) / tMass[t], 0) / i.types.length; });
+      tot = 0; items.forEach(i => { tot += i.w; });
+      items.forEach(i => { i.w /= tot; fMass[i.fmt] = (fMass[i.fmt] || 0) + i.w; });
+      items.forEach(i => { i.w *= (fTarget[i.fmt] || 0) / fMass[i.fmt]; });
+    }
+    return items;
+  }
+
+  let samplingCache = { sig: null, items: null };
+  function samplingPool(){
+    const sig = [
+      Array.from(state.selectedTopics).sort().join('|'),
+      Array.from(state.qtypes).sort().join('|'),
+      Array.from(state.formats).sort().join('|')
+    ].join('#');
+    if(samplingCache.sig !== sig) samplingCache = { sig, items: buildSamplingPool() };
+    return samplingCache.items;
+  }
+
+  // Topic filtering here is always exact-match against a real section (see
+  // sectionAllowed above) — no "filter came up empty, silently ignore it" fallback.
+  // If a filter combination has no matching questions this returns null and the
+  // caller shows the "no questions found" empty state.
   function pickNextQuestion(){
-    const bankPool = state.useBank ? eligibleBankPool() : [];
-    const genPools = state.useGen ? eligibleGeneratedPools() : { concept: [], templates: [] };
-    const bankAvailable = bankPool.length > 0;
-    const genAvailable = genPools.concept.length > 0 || genPools.templates.length > 0;
-
-    if(bankAvailable && genAvailable){
-      return Math.random() < 0.5 ? pickBankQuestion(bankPool) : pickGeneratedQuestion(genPools);
-    }
-    if(bankAvailable) return pickBankQuestion(bankPool);
-    if(genAvailable) return pickGeneratedQuestion(genPools);
-    return null;
+    const items = samplingPool();
+    if(!items) return null;
+    const item = weightedPick(items, i => i.w);
+    return item.isTemplate ? item.q.generate() : item.q;
   }
 
   // A question with no qtype (untagged legacy content) always matches — the filter
@@ -1390,23 +1382,16 @@
     return q.qtype.some(t => state.qtypes.has(t));
   }
 
-  // Retries a bounded number of times: a single pickNextQuestion() call can come back
-  // empty (e.g. it coin-flipped toward the source that has nothing for the current
-  // topic filter) even though the other enabled source does have matching questions,
-  // and separately, a match on source/topic doesn't guarantee a match on qtype. Only
-  // give up (return null, triggering the "no questions found" empty state) once every
-  // retry in the budget failed too.
-  // Same retry budget as before, but now also skips anything asked within the
-  // last NO_REPEAT_WINDOW questions. If the current filter combination is too
-  // narrow to fill that window without a repeat (e.g. a topic with only a
-  // handful of questions), we fall back to the first valid match found rather
-  // than returning null — a repeat is preferable to the "no questions found"
-  // empty state when the filter itself is just small.
+  // Draws up to 30 times, skipping anything asked within the last NO_REPEAT_WINDOW
+  // questions. If the current filter combination is too narrow to avoid a repeat
+  // (e.g. a topic with only a handful of questions), the first draw is returned
+  // anyway — a repeat is preferable to the "no questions found" empty state. Returns
+  // null only when the filters leave nothing to draw.
   function pickNextQuestionFiltered(){
     let fallback = null;
     for(let i = 0; i < 30; i++){
       const q = pickNextQuestion();
-      if(q && matchesQtype(q) && matchesFormat(q)){
+      if(q){
         if(!fallback) fallback = q;
         if(!state.recentKeys.includes(questionKey(q))) return q;
       }
@@ -1434,21 +1419,14 @@
     if(q.type === 'group'){ renderGroupQuestion(q); return; }
     if(q.type === 'table-fill'){ renderTableFillQuestion(q); return; }
 
-    const isBank = q.source !== 'generated';
     const letters = Object.keys(q.options);
     // Template-generated numeric questions get a fresh random id every time they're
     // generated (see questionKey above) — show the stable template id instead so the
     // same displayed id always corresponds to the same underlying question/template.
-    const qid = q.template || q.id || '';
 
     let html = `
       <div class="qcard">
-        <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
-          <span class="tag">${bidiSafe(q.section || '')}</span>
-          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
-          ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
-        </div>
+        <div class="qmeta">${metaHtml(q)}</div>
         <p class="qtext">${bidiSafe(q.question)}</p>
         ${q.multi ? '<p class="multi-instruction">☑ נא לסמן את כל התשובות הנכונות</p>' : ''}
         <div class="options" id="optionsWrap">
@@ -1481,6 +1459,15 @@
       });
     });
     document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+  }
+
+  // Tag strip above every question. DOM order = visual order in RTL (first = rightmost):
+  // type (teal) · structure (rose) · topic (grey). The question id is deliberately not shown.
+  function metaHtml(q){
+    const types = (q.qtype || []).filter(t => QTYPE_LABELS[t]);
+    return types.map(t => `<span class="tag qt">${QTYPE_LABELS[t]}</span>`).join('') +
+      `<span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>` +
+      `<span class="tag">${bidiSafe(q.section || '')}</span>`;
   }
 
   function escapeHtml(s){
@@ -1586,10 +1573,9 @@
         : 'נכון בניסיון השני.';
       feedbackWrap.innerHTML = `<div class="feedback correct">${msg}</div>`;
       if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
-      saveStats();
       updateStatsUI();
       document.getElementById('checkActionsWrap').style.display = 'none';
-      showExplanation(q, letter, true);
+      showExplanation(q);
       return;
     }
 
@@ -1620,9 +1606,8 @@
       feedbackWrap.innerHTML = '';
       document.getElementById('checkActionsWrap').style.display = 'none';
       state.stats.missed++;
-      saveStats();
       updateStatsUI();
-      showExplanation(q, letter, false);
+      showExplanation(q);
     }
   }
 
@@ -1646,10 +1631,9 @@
         : 'נכון בניסיון השני.';
       feedbackWrap.innerHTML = `<div class="feedback correct">${msg}</div>`;
       if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
-      saveStats();
       updateStatsUI();
       document.getElementById('checkActionsWrap').style.display = 'none';
-      showExplanation(q, null, true);
+      showExplanation(q);
       return;
     }
 
@@ -1670,9 +1654,8 @@
       feedbackWrap.innerHTML = '';
       document.getElementById('checkActionsWrap').style.display = 'none';
       state.stats.missed++;
-      saveStats();
       updateStatsUI();
-      showExplanation(q, null, false);
+      showExplanation(q);
     }
   }
 
@@ -1686,7 +1669,6 @@
 
   document.getElementById('resetStatsBtn').addEventListener('click', () => {
     state.stats = { first: 0, second: 0, missed: 0 };
-    saveStats();
     updateStatsUI();
   });
 
@@ -1695,12 +1677,24 @@
     return q.explanation || { correct: '', wrong: '' };
   }
 
-  function showExplanation(q, chosenLetter, wasCorrect){
+  function showExplanation(q){
     const exp = getExplanation(q);
     const box = document.getElementById('explainBox');
     let noteHtml = '';
     if(q.note){
-      noteHtml = `<div class="note-callout">📌 הערת עדכון מהמקור: ${bidiSafe(q.note)}</div>`;
+      // A note holds either a protocol-update remark or an "unverified explanation"
+      // warning (the two standard wordings, one of them starting with ⚠️), or both
+      // joined in one note. Only a real update remark gets the "הערת עדכון מהמקור:" prefix.
+      const UNVERIFIED_SHORT = 'ההסבר לא אומת מול מקור אמין.';
+      const isWarning = /^⚠️/.test(q.note);
+      if(isWarning){
+        noteHtml += `<div class="note-callout">${bidiSafe(q.note)}</div>`;
+      } else {
+        const hasUnverified = q.note.includes(UNVERIFIED_SHORT);
+        const update = q.note.replace(UNVERIFIED_SHORT, '').trim();
+        if(update) noteHtml += `<div class="note-callout">📌 הערת עדכון מהמקור: ${bidiSafe(update)}</div>`;
+        if(hasUnverified) noteHtml += `<div class="note-callout">📌 ${UNVERIFIED_SHORT}</div>`;
+      }
     }
     let inner = '';
     if(exp.correct){
@@ -1773,18 +1767,11 @@
       `;
     }).join('');
 
-    const isBank = q.source !== 'generated';
-    const qid = q.template || q.id || '';
     const checkDisabled = state.answered || !matchAllPaired();
 
     qArea.innerHTML = `
       <div class="qcard">
-        <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
-          <span class="tag">${bidiSafe(q.section || '')}</span>
-          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
-          ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
-        </div>
+        <div class="qmeta">${metaHtml(q)}</div>
         <p class="qtext">${bidiSafe(q.question)}</p>
         <p class="multi-instruction">🔗 יש לשדך בין הרשימות</p>
         <div class="match-wrap">
@@ -1888,10 +1875,9 @@
       renderMatchInner();
       const msg = state.attempt === 0 ? 'נכון בניסיון הראשון! 🎯' : 'נכון בניסיון השני.';
       document.getElementById('feedbackWrap').innerHTML = `<div class="feedback correct">${msg}</div>`;
-      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
-      saveStats(); updateStatsUI();
+      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; } updateStatsUI();
       document.getElementById('checkActionsWrap').style.display = 'none';
-      showExplanation(q, null, true);
+      showExplanation(q);
       return;
     }
     if(state.attempt === 0){
@@ -1904,9 +1890,8 @@
       renderMatchInner();
       document.getElementById('feedbackWrap').innerHTML = '';
       document.getElementById('checkActionsWrap').style.display = 'none';
-      state.stats.missed++;
-      saveStats(); updateStatsUI();
-      showExplanation(q, null, false);
+      state.stats.missed++; updateStatsUI();
+      showExplanation(q);
     }
   }
 
@@ -1947,18 +1932,11 @@
       `;
     }).join('');
 
-    const isBank = q.source !== 'generated';
-    const qid = q.template || q.id || '';
     const checkDisabled = state.answered || !itemKeys.every(k => state.groupAssign[k]);
 
     qArea.innerHTML = `
       <div class="qcard">
-        <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
-          <span class="tag">${bidiSafe(q.section || '')}</span>
-          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
-          ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
-        </div>
+        <div class="qmeta">${metaHtml(q)}</div>
         <p class="qtext">${bidiSafe(q.question)}</p>
         <p class="multi-instruction">🗂️ יש למיין את הפריטים לקטגוריות למטה</p>
         <div class="group-pool" id="gPool"><div class="group-pool-label">פריטים לשיוך</div>${poolHtml}</div>
@@ -2012,10 +1990,9 @@
       renderGroupInner();
       const msg = state.attempt === 0 ? 'נכון בניסיון הראשון! 🎯' : 'נכון בניסיון השני.';
       document.getElementById('feedbackWrap').innerHTML = `<div class="feedback correct">${msg}</div>`;
-      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
-      saveStats(); updateStatsUI();
+      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; } updateStatsUI();
       document.getElementById('checkActionsWrap').style.display = 'none';
-      showExplanation(q, null, true);
+      showExplanation(q);
       return;
     }
     if(state.attempt === 0){
@@ -2028,9 +2005,8 @@
       renderGroupInner();
       document.getElementById('feedbackWrap').innerHTML = '';
       document.getElementById('checkActionsWrap').style.display = 'none';
-      state.stats.missed++;
-      saveStats(); updateStatsUI();
-      showExplanation(q, null, false);
+      state.stats.missed++; updateStatsUI();
+      showExplanation(q);
     }
   }
 
@@ -2121,18 +2097,11 @@
       });
     });
 
-    const isBank = q.source !== 'generated';
-    const qid = q.template || q.id || '';
     const checkDisabled = state.answered || !tfAllPlaced();
 
     qArea.innerHTML = `
       <div class="qcard">
-        <div class="qmeta">
-          <span class="tag ${isBank ? 'bank' : 'generated'}">${isBank ? 'קבצים' : 'מצגות'}</span>
-          <span class="tag">${bidiSafe(q.section || '')}</span>
-          <span class="tag fmt">${FORMAT_LABELS[formatOf(q)]}</span>
-          ${qid ? `<span class="tag qid"><bdi>${escapeHtml(qid)}</bdi></span>` : ''}
-        </div>
+        <div class="qmeta">${metaHtml(q)}</div>
         <p class="qtext">${bidiSafe(q.question)}</p>
         <p class="multi-instruction">🧩 שבצו כל ערך לתא המתאים בטבלה למטה</p>
         <div class="tf-pool">${poolHtml}</div>
@@ -2190,10 +2159,9 @@
       renderTableFillInner();
       const msg = state.attempt === 0 ? 'נכון בניסיון הראשון! 🎯' : 'נכון בניסיון השני.';
       document.getElementById('feedbackWrap').innerHTML = `<div class="feedback correct">${msg}</div>`;
-      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; }
-      saveStats(); updateStatsUI();
+      if(state.attempt === 0){ state.stats.first++; } else { state.stats.second++; } updateStatsUI();
       document.getElementById('checkActionsWrap').style.display = 'none';
-      showExplanation(q, null, true);
+      showExplanation(q);
       return;
     }
     if(state.attempt === 0){
@@ -2206,25 +2174,13 @@
       renderTableFillInner();
       document.getElementById('feedbackWrap').innerHTML = '';
       document.getElementById('checkActionsWrap').style.display = 'none';
-      state.stats.missed++;
-      saveStats(); updateStatsUI();
-      showExplanation(q, null, false);
+      state.stats.missed++; updateStatsUI();
+      showExplanation(q);
     }
   }
 
   // ---------------- Next question flow ----------------
   function goNext(){
-    if(!(state.useBank || state.useGen)){
-      state.activeChain = null; updateChainBanner();
-      qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות מקור שאלות אחד למעלה.</p></div>`;
-      return;
-    }
-    if(state.qtypes.size === 0){
-      state.activeChain = null; updateChainBanner();
-      qArea.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><p>בחר לפחות סוג שאלה אחד למעלה.</p></div>`;
-      return;
-    }
-
     // A sequence already in progress takes precedence over the random picker, so
     // its remaining steps are shown in order and can't be skipped or reordered.
     if(chainHasMoreSteps() && chainShouldContinue()){
@@ -2239,7 +2195,7 @@
     const q = pickNextQuestionFiltered();
     if(!q){
       updateChainBanner();
-      qArea.innerHTML = `<div class="empty-state"><div class="big">😕</div><p>לא נמצאו שאלות בנושא/מקור/סוג/מבנה שנבחרו. נסה להרחיב את הסינון.</p></div>`;
+      qArea.innerHTML = `<div class="empty-state"><div class="big">😕</div><p>לא נמצאו שאלות בנושא/סוג/מבנה שנבחרו. נסה להרחיב את הסינון.</p></div>`;
       return;
     }
 
@@ -2252,7 +2208,7 @@
     scrollToQuestionTop();
   }
 
-  // Scrolls so the top of the question card (source/topic tags, then question
+  // Scrolls so the top of the question card (type/structure/topic tags, then question
   // text) lands at a small, consistent offset from the top of the viewport —
   // rather than jumping all the way to the very top of the page (above the
   // filter panel and stats strip). Since qArea's position in the document is

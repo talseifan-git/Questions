@@ -1,12 +1,12 @@
 // bump this on every deploy that changes any cached file, to invalidate old caches
-const CACHE_VERSION = 'v17';
+const CACHE_VERSION = 'v18';
 const CACHE_NAME = `chovshim-tirgul-${CACHE_VERSION}`;
 
 const APP_SHELL = [
   './',
   './index.html',
-  './question_bank.js',
-  './generated_content.js',
+  './questions.js',
+  './templates.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
